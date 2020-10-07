@@ -4,6 +4,7 @@ import com.bank.AccountTestData;
 import com.bank.CreditCardTestData;
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
+import com.bank.repository.utils.DBUtils;
 import org.h2.tools.RunScript;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,7 +27,7 @@ public class CreditCardRepositoryTest {
 
     @Before
     public void setUp() {
-        try (Connection connection = Utils.getConnection()) {
+        try (Connection connection = DBUtils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {

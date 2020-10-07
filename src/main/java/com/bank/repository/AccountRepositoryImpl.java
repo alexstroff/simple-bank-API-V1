@@ -7,8 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bank.repository.Utils.getConnection;
-import static com.bank.repository.Utils.getSQLPath;
+import static com.bank.repository.utils.DBUtils.getConnection;
+import static com.bank.repository.utils.DBUtils.getSQLPath;
 
 public class AccountRepositoryImpl implements AccountRepository {
 

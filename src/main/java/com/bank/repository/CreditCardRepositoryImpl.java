@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bank.repository.Utils.*;
+import static com.bank.repository.utils.DBUtils.*;
 
 public class CreditCardRepositoryImpl implements CreditCardRepository {
 

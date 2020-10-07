@@ -1,8 +1,9 @@
 package com.bank.rest;
 
+import com.bank.HttpServerUtils;
 import com.bank.model.Client;
 import com.bank.model.to.ClientTo;
-import com.bank.repository.Utils;
+import com.bank.repository.utils.DBUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.h2.tools.RunScript;
@@ -29,14 +30,14 @@ public class ClientRestControllerTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        server = Utils.startServer();
+        server = HttpServerUtils.startServer();
         javax.ws.rs.client.Client c = ClientBuilder.newClient();
-        target = c.target(Utils.BASE_URI);
+        target = c.target(HttpServerUtils.BASE_URI);
     }
 
     @Before
     public void setup() {
-        try (Connection connection = Utils.getDataSource().getConnection()) {
+        try (Connection connection = DBUtils.getDataSource().getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {

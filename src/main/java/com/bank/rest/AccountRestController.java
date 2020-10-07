@@ -1,10 +1,8 @@
 package com.bank.rest;
 
 
-import com.bank.model.Account;
-import com.bank.repository.Utils;
+import com.bank.repository.utils.DBUtils;
 import com.bank.service.AccountService;
-import org.h2.jdbcx.JdbcDataSource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,7 +15,7 @@ import javax.ws.rs.core.Response;
 public class AccountRestController {
 
     //todo Боль!!! Спросить о зависимостях
-    private AccountService accountService = new AccountService(Utils.getDataSource());
+    private AccountService accountService = new AccountService(DBUtils.getDataSource());
 
 
     static final String REST_URL = "account";
