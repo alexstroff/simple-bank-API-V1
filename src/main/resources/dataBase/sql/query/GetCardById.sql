@@ -1,0 +1,1 @@
+select number, registered from CREDIT_CARDS where id = ?

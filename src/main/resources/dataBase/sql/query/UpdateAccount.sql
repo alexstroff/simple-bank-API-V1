@@ -1,0 +1,1 @@
+update accounts set amount = ? where id = ?

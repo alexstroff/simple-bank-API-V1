@@ -1,0 +1,1 @@
+select id, number, registered from credit_cards where account_id = ?

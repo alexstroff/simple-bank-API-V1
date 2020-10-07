@@ -1,0 +1,1 @@
+delete from credit_cards where id = ?

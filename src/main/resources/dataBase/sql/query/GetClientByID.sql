@@ -1,0 +1,1 @@
+SELECT id, name, email, registered FROM clients WHERE id = ?

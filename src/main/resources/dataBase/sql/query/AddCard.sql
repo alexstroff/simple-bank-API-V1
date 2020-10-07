@@ -1,0 +1,1 @@
+insert into credit_cards (account_id, number) values ( ?, ? )
