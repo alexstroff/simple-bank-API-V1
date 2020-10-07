@@ -2,7 +2,7 @@ package com.bank.repository;
 
 import com.bank.ClientTestData;
 import com.bank.model.Account;
-import com.bank.model.Client;
+import com.bank.repository.utils.DBUtils;
 import org.h2.tools.RunScript;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class AccountRepositoryImplTest {
 
     @Before
     public void setUp() {
-        try (Connection connection = Utils.getConnection()) {
+        try (Connection connection = DBUtils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {

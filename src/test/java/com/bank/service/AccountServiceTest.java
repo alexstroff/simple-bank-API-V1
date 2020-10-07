@@ -1,25 +1,14 @@
 package com.bank.service;
 
-import com.bank.model.CreditCard;
-import com.bank.repository.Utils;
-import org.h2.jdbcx.JdbcDataSource;
+import com.bank.repository.utils.DBUtils;
 import org.h2.tools.RunScript;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.bank.AccountTestData.*;
-import static com.bank.ClientTestData.*;
-import static com.bank.CreditCardTestData.*;
 
 public class AccountServiceTest {
 
@@ -27,12 +16,12 @@ public class AccountServiceTest {
 
     @BeforeClass
     public static void setup() {
-        service = new AccountService(Utils.getDataSource());
+        service = new AccountService(DBUtils.getDataSource());
     }
 
     @Before
     public void setUp() throws Exception {
-        try (Connection connection = Utils.getConnection()){
+        try (Connection connection = DBUtils.getConnection()){
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {

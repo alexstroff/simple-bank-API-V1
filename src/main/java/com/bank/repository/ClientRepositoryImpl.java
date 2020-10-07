@@ -1,12 +1,13 @@
 package com.bank.repository;
 
 import com.bank.model.Client;
+import com.bank.repository.utils.DBUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bank.repository.Utils.*;
+import static com.bank.repository.utils.DBUtils.*;
 
 public class ClientRepositoryImpl implements ClientRepository {
 
@@ -48,11 +49,7 @@ public class ClientRepositoryImpl implements ClientRepository {
                 client.setRegistered(resultSet.getTimestamp("registered"));
                 clientList.add(client);
             }
-            if (clientList.isEmpty()) {
-                throw new SQLException("Not found any client!");
-            } else {
-                return clientList;
-            }
+            return clientList;
         }
     }
 
@@ -62,7 +59,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
         if (client.isNew()) {
             sql = getSQLPath(SqlScripts.SAVE_CLIENT.getPath());
-            try (PreparedStatement ps = Utils.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = DBUtils.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, client.getName());
                 ps.setString(2, client.getEmail());
                 ps.executeUpdate();
@@ -77,7 +74,7 @@ public class ClientRepositoryImpl implements ClientRepository {
             }
         } else {
             sql = getSQLPath(SqlScripts.UPDATE_CLIENT.getPath());
-            try (PreparedStatement ps = Utils.getConnection().prepareStatement(sql)) {
+            try (PreparedStatement ps = DBUtils.getConnection().prepareStatement(sql)) {
                 ps.setString(1, client.getName());
                 ps.setString(2, client.getEmail());
                 ps.setInt(3, client.getId());
@@ -142,6 +139,6 @@ public class ClientRepositoryImpl implements ClientRepository {
 //    }
 
     private Connection getConnection() throws SQLException {
-        return Utils.getConnection();
+        return DBUtils.getConnection();
     }
 }

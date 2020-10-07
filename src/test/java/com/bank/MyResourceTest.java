@@ -4,12 +4,11 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-import com.bank.repository.Utils;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class MyResourceTest {
@@ -21,7 +20,7 @@ public class MyResourceTest {
     public void setUp() throws Exception {
         // start the server
 //        server = Main.startServer();
-        server = Utils.startServer();
+        server = HttpServerUtils.startServer();
         // create the client
         Client c = ClientBuilder.newClient();
 
@@ -31,7 +30,7 @@ public class MyResourceTest {
         // --
 //         c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
 
-        target = c.target(Utils.BASE_URI);
+        target = c.target(HttpServerUtils.BASE_URI);
     }
 
     @After
