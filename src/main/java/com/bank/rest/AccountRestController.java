@@ -1,26 +1,22 @@
 package com.bank.rest;
 
 
-import com.bank.model.Account;
 import com.bank.model.Client;
-import com.bank.repository.Utils;
+import com.bank.repository.utils.DBUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.AccountService;
 import com.bank.service.ClientService;
-import org.h2.jdbcx.JdbcDataSource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("accounts")
 public class AccountRestController {
 
     //todo Боль!!! Спросить о зависимостях
-    private AccountService accountService = new AccountService(Utils.getDataSource());
+    private AccountService accountService = new AccountService(DBUtils.getDataSource());
     private ClientService clientService = new ClientService();
 
 
