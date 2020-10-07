@@ -14,7 +14,7 @@ interface ServiceInterface<T>{
 
      void update(Object o);
 
-     void save(Object o);
+//     void save(Object o);
 
      T delete(Object o);
 

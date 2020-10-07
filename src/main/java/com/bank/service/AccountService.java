@@ -70,15 +70,15 @@ public class AccountService implements ServiceInterface {
         }
     }
 
-    @Override
-    public void save(Object o) {
-        Account account = (Account) o;
-        if(account.getId() == null){
-            accountRepository.addAccount(clientId, account);
-
-        }
-
-    }
+//    @Override
+//    public void save(Object o) {
+//        Account account = (Account) o;
+//        if(account.getId() == null){
+//            accountRepository.addAccount(clientId, account);
+//
+//        }
+//
+//    }
 
     @Override
     public Object delete(Object o) {
