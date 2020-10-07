@@ -50,7 +50,7 @@ public class AccountRepositoryImplTest {
                     .build();
 
             List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
-            repository.addAccount(CLIENT_1, account);
+            repository.addAccount(CLIENT_1.getId(), account);
             List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1);
             newAccounts.removeAll(oldAccounts);
             Assert.assertEquals(1, newAccounts.size());
@@ -89,7 +89,7 @@ public class AccountRepositoryImplTest {
                 .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
                 .currency("RUB")
                 .build();
-        repository.addAccount(CLIENT_1, account);
+        repository.addAccount(CLIENT_1.getId(), account);
         List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
         Assert.assertEquals(2, oldAccounts.size());
 
