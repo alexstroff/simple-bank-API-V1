@@ -13,12 +13,12 @@ import static com.bank.repository.Utils.getSQLPath;
 public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
-    public void addAccount(Client client, Account account) throws SQLException {
+    public void addAccount(int clientId, Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.ADD_ACCOUNT.getPath());
 
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, client.getId());
+            ps.setInt(1, clientId);
             ps.setString(2, account.getNumber());
             ps.setBigDecimal(3, account.getAmount());
             ps.setString(4, account.getCurrency());
@@ -121,26 +121,22 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateAccount(Account account) {
+    public void updateAccount(Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.UPDATE_ACCOUNT.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, account.getId());
             stmt.setBigDecimal(2, account.getAmount());
             stmt.execute();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
     }
 
     @Override
-    public boolean deletAccount(Account account) {
+    public boolean deletAccount(Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, account.getId());
             int rows = stmt.executeUpdate();
             if (rows != 0) return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
         return false;
     }
