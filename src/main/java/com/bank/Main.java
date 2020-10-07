@@ -32,6 +32,11 @@ public class Main {
 //            RunScript.execute(Utils.getConnection(), new FileReader( "src/main/resources/dataBase/H2init.SQL"));
             System.out.println("Starting server without argument (scripts)");
         }
+        //
+        //
+        // Sergey: Test pull request
+        //
+        //
         Utils.startService();
     }
 }
