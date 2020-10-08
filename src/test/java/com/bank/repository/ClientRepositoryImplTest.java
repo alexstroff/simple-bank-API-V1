@@ -65,6 +65,7 @@ public class ClientRepositoryImplTest {
     public void getAll() throws SQLException {
         List<Client> allClients = clientRepository.getAll();
 //        Collections.sort(allCliens, clientComparator);
+
         Assert.assertEquals(allClients.size(), 2);
         CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
     }
