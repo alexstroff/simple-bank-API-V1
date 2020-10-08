@@ -1,5 +1,6 @@
-package com.bank.model;
+package com.bank.model.utils;
 
+import com.bank.model.Client;
 import com.bank.model.to.ClientTo;
 import com.bank.model.to.ClientToWithId;
 

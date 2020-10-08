@@ -56,7 +56,7 @@ public class AccountRepositoryImplTest {
             Assert.assertEquals(1, newAccounts.size());
 
             Account newAccount = newAccounts.get(0);
-            newAccount.setId(null);
+            newAccount.setId(0);
             ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, newAccount);
     }
 

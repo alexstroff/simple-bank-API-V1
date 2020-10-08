@@ -48,7 +48,7 @@ public class AccountServiceTest {
         Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(2)).currency("RUB").build();
         List<Account> accounts = new ArrayList<>();
         accounts.add(account);
-        List<Account> accounts1 = service.getAll(client);
+        List<Account> accounts1 = service.getAll(client.getId());
         AccountTestData.ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(accounts, accounts1);
 
     }
@@ -82,9 +82,9 @@ public class AccountServiceTest {
     public void delete() {
         Client client = Client.builder().id(100000).name("Vasay").email("vasyaTheGreat@mail.ru").build();
         Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(2)).currency("RUB").build();
-        List<Account> accounts = service.getAll(client);
+        List<Account> accounts = service.getAll(client.getId());
         service.delete(account);
-        List<Account> accounts1 = service.getAll(client);
+        List<Account> accounts1 = service.getAll(client.getId());
         Assert.assertNotEquals(accounts, account);
 
     }

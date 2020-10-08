@@ -1,6 +1,5 @@
 package com.bank.service;
 
-import com.bank.model.Account;
 import com.bank.model.CreditCard;
 import com.bank.repository.CreditCardRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
@@ -9,7 +8,7 @@ import com.bank.repository.txManager.TxManagerImpl;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CreditCardService implements ServiceInterface {
+public class CreditCardService implements ServiceIntf {
 
     private CreditCardRepositoryImpl cardRepository;
     private TxManager txManager;
@@ -20,8 +19,7 @@ public class CreditCardService implements ServiceInterface {
     }
 
     @Override
-    public List<CreditCard> getAll(Object o) {
-        int accountId= (int) o;
+    public List<CreditCard> getAll(int accountId) {
         List<CreditCard> cards = null;
         try {
             cards = cardRepository.getAllCards(accountId);
@@ -32,8 +30,7 @@ public class CreditCardService implements ServiceInterface {
     }
 
     @Override
-    public CreditCard getById(Object o) {
-        int id = (int) o;
+    public CreditCard getById(int id) {
         CreditCard card = new CreditCard();
         try {
             card = cardRepository.getCardById(id);
