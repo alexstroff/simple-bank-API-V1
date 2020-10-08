@@ -1,6 +1,6 @@
 package com.bank.rest;
 
-import com.bank.HttpServerUtils;
+import com.bank.utils.HttpServerUtils;
 import com.bank.repository.utils.DBUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.h2.tools.RunScript;

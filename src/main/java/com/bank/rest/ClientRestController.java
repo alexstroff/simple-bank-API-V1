@@ -7,25 +7,36 @@ import com.bank.model.to.ClientTo;
 import com.bank.model.to.ClientToWithId;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.ClientService;
+import com.bank.utils.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.invoke.MethodHandles;
 
 @Path("client")
 public class ClientRestController {
 
-    ClientService service = new ClientService();
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ClientService service;
+
+    public ClientRestController() {
+        service = new ClientService();
+    }
 
     @GET
     @Path("/{id}")
     public String get(@PathParam("id") int id) {
+        logger.trace("got id = {}", id);
         return JacksonUtils.writeValue(service.getById(id));
     }
 
     @GET
     @Path("/all")
     public String getAll() {
+        logger.trace("Get All");
         return JacksonUtils.writeValue(service.getAll());
     }
 
@@ -33,64 +44,27 @@ public class ClientRestController {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response add(ClientTo clientTo) {
-//        System.out.println(clientTo);
+        logger.trace("got clientTo = {}", clientTo);
         Client newClient = service.addNewClient(EntityUtils.fromClientToToClient(clientTo));
+        logger.debug("return = {}", newClient);
         return Response.status(201).entity(newClient.getId()).build();
     }
 
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response add(ClientToWithId clientToWithId) {
+    public Response update(ClientToWithId clientToWithId) {
+        logger.trace("got id = {}", clientToWithId);
         Client client = service.updateClient(EntityUtils.fromClientToWithIdToClient(clientToWithId));
+        logger.debug("return = {}", clientToWithId);
         return Response.status(202).entity(client).build();
     }
 
     @GET
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") int id) {
+        logger.trace("got id = {}", id);
         service.deleteClient(id);
         return Response.status(202).entity(String.valueOf(id)).build();
     }
-
-//    @POST
-//    @Path("/add")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response add(Client client) {
-//        service.addClient(client);
-//
-//        return Response.status(201).entity(client).build();
-//    }
-
-    //    @GET
-//    @Path("/get")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Track getTrackInJSON() {
-//
-//        Track track = new Track();
-//        track.setTitle("Enter Sandman");
-//        track.setSinger("Metallica");
-//
-//        return track;
-//
-//    }
-//    @GET
-//    @Path("/get")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Client getTrackInJSON() {
-//        Client client = new Client();
-//        client.setName("su");
-//        client.setEmail("12@mail.ru");
-//        return client;
-//
-//    }
-//
-//    @POST
-//    @Path("/post")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response createTrackInJSON(Client client) {
-//        String result = "Track saved : " + client;
-//        return Response.status(201).entity(result).build();
-//
-//    }
 }

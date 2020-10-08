@@ -1,39 +1,34 @@
 package com.bank.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 
 public class ResourceReader {
-//    private static ResourceReader instance;
 
-    public ResourceReader(){}
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-//    public ResourceReader get(){
-//        if (instance == null){
-//            instance = new ResourceReader();
-//        }
-//        return instance;
-//    }
-//
+    public ResourceReader() {
+    }
+
     public synchronized String getSQL(String fileName) {
-//        InputStream is = ResourceReader.class.getResourceAsStream("/AccountSelectAll.sql");
-//
-        InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
         String line;
         StringBuilder sb = new StringBuilder();
 
-        try {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+             BufferedReader br = new BufferedReader(new InputStreamReader(is));) {
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Something wrong, with getting SQL from file name = {}", fileName, e);
         }
-
+        logger.debug("Got SQL = {}", sb.toString());
         return sb.toString();
     }
 }

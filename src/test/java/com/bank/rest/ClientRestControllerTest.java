@@ -1,6 +1,6 @@
 package com.bank.rest;
 
-import com.bank.HttpServerUtils;
+import com.bank.utils.HttpServerUtils;
 import com.bank.model.Client;
 import com.bank.model.to.ClientTo;
 import com.bank.repository.utils.DBUtils;
@@ -85,6 +85,7 @@ public class ClientRestControllerTest {
 
     @Test
     public void update() {
+
         Client updClient = Client.builder()
                 .id(CLIENT_1_ID)
                 .name("new name")

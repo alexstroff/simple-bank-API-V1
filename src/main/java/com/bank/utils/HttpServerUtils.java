@@ -1,4 +1,4 @@
-package com.bank;
+package com.bank.utils;
 
 import com.bank.repository.ResourceReader;
 import org.glassfish.grizzly.http.server.HttpServer;
