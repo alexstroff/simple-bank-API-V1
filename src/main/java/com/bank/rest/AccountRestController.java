@@ -2,17 +2,12 @@ package com.bank.rest;
 
 
 import com.bank.model.Account;
-import com.bank.model.Client;
-import com.bank.model.EntityUtils;
-import com.bank.repository.utils.DBUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.AccountService;
-import com.bank.service.ClientService;
+import com.bank.service.ClientServiceImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("client/account")
 public class AccountRestController {
@@ -22,11 +17,11 @@ public class AccountRestController {
 //    private ClientService clientService = new ClientService();
 
     private AccountService accountService;
-    private ClientService clientService;
+    private ClientServiceImpl clientService;
 
     public AccountRestController() {
         this.accountService = new AccountService();
-        this.clientService = new ClientService();
+        this.clientService = new ClientServiceImpl();
     }
 
     static final String REST_URL = "account";

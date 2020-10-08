@@ -9,6 +9,9 @@ import java.sql.SQLException;
 
 public class DBUtils {
     // Base URI the Grizzly HTTP server will listen on
+
+    //ToDo settings from resources
+    //Resource resource = new ClassPathResource("db/postgres.properties");
     private static final String DB_DRIVER = "org.h2.Driver";
     private static final String DB_URL = "jdbc:h2:mem:bank;"
             + "DB_CLOSE_DELAY=-1;"

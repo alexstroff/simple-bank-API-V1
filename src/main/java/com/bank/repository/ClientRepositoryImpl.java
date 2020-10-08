@@ -15,7 +15,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 //            "(SELECT clients_id FROM accounts WHERE id = ?)";
 
     @Override
-    public Client getClientById(Integer id) throws SQLException {
+    public Client getById(Integer id) throws SQLException {
         String sql = getSQLPath(SqlScripts.GET_CLIENT_BY_ID.getPath());
         Client client = null;
         try (Connection connection = getConnection();

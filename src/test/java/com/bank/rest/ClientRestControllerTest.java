@@ -92,8 +92,8 @@ public class ClientRestControllerTest {
                 .email("new@mail.com")
                 .build();
 
-        Response response = target.path("/client/update").request()
-                .post(Entity.entity(updClient, MediaType.APPLICATION_JSON));
+        Response response = target.path("/client/").request()
+                .put(Entity.entity(updClient, MediaType.APPLICATION_JSON));
 
         assertEquals("should return status 201", 202, response.getStatus());
 
@@ -109,7 +109,7 @@ public class ClientRestControllerTest {
         String s = target.path("/client/all").request().get(String.class);
         List<Client> oldClientList = JacksonUtils.readValues(s, Client.class);
 
-        String s1 = target.path("/client/delete/" + CLIENT_1_ID).request().get(String.class);
+        String s1 = target.path("/client/" + CLIENT_1_ID).request().delete(String.class);
         Assert.assertEquals(s1, String.valueOf(CLIENT_1_ID));
 
         String s2 = target.path("/client/all").request().get(String.class);

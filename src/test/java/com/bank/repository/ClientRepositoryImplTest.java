@@ -55,7 +55,7 @@ public class ClientRepositoryImplTest {
     @Test
     public void getClientById() throws SQLException {
         Client client;
-        client = clientRepository.getClientById(CLIENT_1_ID);
+        client = clientRepository.getById(CLIENT_1_ID);
         CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
     }
 
@@ -66,7 +66,7 @@ public class ClientRepositoryImplTest {
                 .email(CLIENT_3.getEmail())
                 .build();
         clientRepository.save(newClient);
-        Client client1 = clientRepository.getClientById(CLIENT_3.getId());
+        Client client1 = clientRepository.getById(CLIENT_3.getId());
         CLIENTS_MATCHER.assertMatch(newClient, client1);
 
     }
@@ -95,7 +95,7 @@ public class ClientRepositoryImplTest {
                 .email("update@mail.ru")
                 .build();
         clientRepository.save(client);
-        Client client1 = clientRepository.getClientById(100006);
+        Client client1 = clientRepository.getById(100006);
         clientRepository.deleteClient(100006);
         List<Client> clients = clientRepository.getAll();
         CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);

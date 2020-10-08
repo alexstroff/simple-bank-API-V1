@@ -37,7 +37,8 @@ public class ClientTestData {
     public static final Comparator<Client> clientComparator = new Comparator<Client>() {
         @Override
         public int compare(Client o1, Client o2) {
-            return o1.getId().compareTo(o2.getId());
+//            return o1.getId().compareTo(o2.getId());
+            return o2.getId() - o1.getId();
         }
     };
 }

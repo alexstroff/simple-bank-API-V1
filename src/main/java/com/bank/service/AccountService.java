@@ -1,7 +1,6 @@
 package com.bank.service;
 
 import com.bank.model.Account;
-import com.bank.model.Client;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.AccountRepositoryImpl;
 import com.bank.repository.ClientRepository;
@@ -9,13 +8,10 @@ import com.bank.repository.ClientRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
 import com.bank.repository.txManager.TxManagerImpl;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.Callable;
 
-public class AccountService implements ServiceInterface {
+public class AccountService implements ServiceIntf {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
@@ -29,8 +25,7 @@ public class AccountService implements ServiceInterface {
     }
 
     @Override
-    public List<Account> getAll(Object o) {
-        int id = (int) o;
+    public List<Account> getAll(int id) {
         List<Account> allClientAccounts = null;
         try {
             allClientAccounts = accountRepository.getAllClientAccounts(id);
@@ -41,8 +36,7 @@ public class AccountService implements ServiceInterface {
     }
 
     @Override
-    public Account getById(Object o) {
-        int id = (int) o;
+    public Account getById(int id) {
         Account account = null;
         try {
             account = accountRepository.getAccountById(id);
