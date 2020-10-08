@@ -53,15 +53,17 @@ public class AccountRestController {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("clientId") int clientId, Account account) {
-        accountService.add(clientId, account);
+    public String addAccount(@PathParam("clientId") int clientId, Account account) {
+        Account account1 = accountService.add(clientId, account);
+        return JacksonUtils.writeValue(account1.getId());
     }
 
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("clientId") int clientId, Account account) {
-        accountService.update(clientId, account);
+    public String update(@PathParam("clientId") int clientId, Account account) {
+        Account account1 = accountService.update(clientId, account);
+        return JacksonUtils.writeValue(account1.getId());
     }
 
 

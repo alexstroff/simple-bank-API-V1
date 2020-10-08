@@ -16,6 +16,8 @@ public interface CreditCardRepository extends BaseRepository<CreditCard>{
      * @param accountId
      * @return find all account's card
      */
+    List<CreditCard> getAllCards(int clientId, int accountId) throws SQLException;
+
     List<CreditCard> getAllCards(int accountId) throws SQLException;
 
     /**

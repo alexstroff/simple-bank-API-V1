@@ -73,10 +73,10 @@ public class CreditCardRepositoryTest {
     @Test
     public void deleteCard() throws SQLException {
         CreditCard savedCard = repository.save(CreditCard.builder().account(ACCOUNT_1).number("0000010111").build());
-        List<CreditCard> oldCardList = repository.getAllCards(ACCOUNT_1_ID);
+        List<CreditCard> oldCardList = repository.getAllCards(100000, ACCOUNT_1_ID);
         log.debug("before delete={}", oldCardList);
         repository.delete(savedCard.getId()); //100006
-        List<CreditCard> newCardList = repository.getAllCards(ACCOUNT_1_ID);
+        List<CreditCard> newCardList = repository.getAllCards(100000, ACCOUNT_1_ID);
         Assert.assertEquals(1, newCardList.size());
         CARD_MATCHER.assertMatch(CARD_1, newCardList.get(0));
     }

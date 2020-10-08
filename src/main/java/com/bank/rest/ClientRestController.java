@@ -40,23 +40,23 @@ public class ClientRestController {
         return JacksonUtils.writeValue(service.getAll());
     }
 
-    @POST
-    @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response add(ClientTo clientTo) {
-        Client newClient = service.add(EntityUtils.fromClientToToClient(clientTo));
-        logger.debug("return = {}", newClient);
-        return Response.status(201).entity(newClient.getId()).build();
-    }
+//    @POST
+//    @Path("/add")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response add(ClientTo clientTo) {
+//        Client newClient = service.add(EntityUtils.fromClientToToClient(clientTo));
+//        logger.debug("return = {}", newClient);
+//        return Response.status(201).entity(newClient.getId()).build();
+//    }
 
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(ClientToWithId clientToWithId) {
-        logger.trace("got id = {}", clientToWithId);
-        Client client = service.update(EntityUtils.fromClientToWithIdToClient(clientToWithId));
-        logger.debug("return = {}", clientToWithId);
-        return Response.status(202).entity(client).build();
-    }
+//    @PUT
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response update(ClientToWithId clientToWithId) {
+//        logger.trace("got id = {}", clientToWithId);
+//        Client client = service.update(EntityUtils.fromClientToWithIdToClient(clientToWithId));
+//        logger.debug("return = {}", clientToWithId);
+//        return Response.status(202).entity(client).build();
+//    }
 
     @DELETE
     @Path("/{id}")

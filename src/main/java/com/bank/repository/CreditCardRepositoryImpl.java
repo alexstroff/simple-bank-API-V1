@@ -12,6 +12,26 @@ import static com.bank.repository.utils.DBUtils.*;
 public class CreditCardRepositoryImpl implements CreditCardRepository {
 
     @Override
+    public List<CreditCard> getAllCards(int accountId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.FIND_ALL_CARDS_BY_ACCOUNT_ID.getPath());
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            ResultSet rs = stmt.executeQuery();
+            List<CreditCard> creditCards = new ArrayList<>();
+            while (rs.next()) {
+                CreditCard card = CreditCard.builder()
+                        .id(rs.getInt("id"))
+                        .number(rs.getString("number"))
+                        .registered(rs.getDate("registered"))
+                        .build();
+                creditCards.add(card);
+            }
+            return creditCards;
+        }
+    }
+
+    @Override
     public CreditCard getById(int id) throws SQLException {
         String sql = getSQLPath(SqlScripts.FIND_CARD_BY_ID.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmp = connection.prepareStatement(sql)) {
@@ -104,7 +124,7 @@ public class CreditCardRepositoryImpl implements CreditCardRepository {
 
 
     @Override
-    public List<CreditCard> getAllCards(int accountId) throws SQLException {
+    public List<CreditCard> getAllCards(int clientId, int accountId) throws SQLException {
         String sql = getSQLPath(SqlScripts.FIND_ALL_CARDS_BY_ACCOUNT_ID.getPath());
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
