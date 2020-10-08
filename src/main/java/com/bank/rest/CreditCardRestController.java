@@ -38,10 +38,11 @@ public class CreditCardRestController {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("clientId") int clientId,
-                           @PathParam("accountId") int accountId,
-                           CreditCard card) {
-        cardService.addByClientId(clientId, accountId, card);
+    public String addCard(@PathParam("clientId") int clientId,
+                              @PathParam("accountId") int accountId,
+                              CreditCard card) {
+        CreditCard creditCard = cardService.addByClientId(clientId, accountId, card);
+        return JacksonUtils.writeValue(creditCard.getId());
     }
 
     @PUT
@@ -67,18 +68,18 @@ public class CreditCardRestController {
     @PUT
     @Path("/{id}/incbalance/{value}")
     public boolean increaseBallance(@PathParam("clientId") int clientId,
-                                 @PathParam("accountId") int accountId,
-                                 @PathParam("id") int id,
-                                 @PathParam("value") BigDecimal value) {
+                                    @PathParam("accountId") int accountId,
+                                    @PathParam("id") int id,
+                                    @PathParam("value") BigDecimal value) {
         return cardService.increaseBallance(clientId, accountId, id, value);
     }
 
     @PUT
     @Path("/{id}/decballanse/{value}")
     public boolean reduceBallance(@PathParam("clientId") int clientId,
-                                    @PathParam("accountId") int accountId,
-                                    @PathParam("id") int id,
-                                    @PathParam("value") BigDecimal value) {
+                                  @PathParam("accountId") int accountId,
+                                  @PathParam("id") int id,
+                                  @PathParam("value") BigDecimal value) {
         return cardService.reduceBallance(clientId, accountId, id, value);
     }
 
