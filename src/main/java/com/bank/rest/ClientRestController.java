@@ -44,7 +44,7 @@ public class ClientRestController {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response add(ClientTo clientTo) {
-        Client newClient = service.add(EntityUtils.fromClientToToClient(clientTo));
+        Client newClient = service.save(EntityUtils.fromClientToToClient(clientTo));
         logger.debug("return = {}", newClient);
         return Response.status(201).entity(newClient.getId()).build();
     }
@@ -53,7 +53,7 @@ public class ClientRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(ClientToWithId clientToWithId) {
         logger.trace("got id = {}", clientToWithId);
-        Client client = service.update(EntityUtils.fromClientToWithIdToClient(clientToWithId));
+        Client client = service.save(EntityUtils.fromClientToWithIdToClient(clientToWithId));
         logger.debug("return = {}", clientToWithId);
         return Response.status(202).entity(client).build();
     }

@@ -1,10 +1,9 @@
 package com.bank.service;
 
 import com.bank.model.Account;
+import com.bank.model.Client;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.AccountRepositoryImpl;
-import com.bank.repository.ClientRepository;
-import com.bank.repository.ClientRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
 import com.bank.repository.txManager.TxManagerImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -13,25 +12,38 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
-public class AccountServiceImpl implements AccountInterface {
+public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final ClientRepository clientRepository;
     private TxManager txManager;
 
 
     public AccountServiceImpl() {
         this.accountRepository = new AccountRepositoryImpl();
-        this.clientRepository = new ClientRepositoryImpl();
         this.txManager = new TxManagerImpl();
     }
+
+    @Override
+    public Account getById(int id) {
+        log.trace("id={}", id);
+        Account account = null;
+        try {
+            account = accountRepository.getById(id);
+        } catch (SQLException e) {
+            log.warn("id={}", id, e);
+        }
+        log.trace("returning={}", account);
+        return account;
+    }
+
+
 
     @Override
     public List<Account> getAll(int id) {
         log.trace("id={}", id);
         List<Account> allClientAccounts = null;
         try {
-            allClientAccounts = accountRepository.getAllClientAccounts(id);
+            allClientAccounts = accountRepository.getAll(id);
         } catch (SQLException e) {
             log.warn("id={}", id, e);
         }
@@ -41,25 +53,18 @@ public class AccountServiceImpl implements AccountInterface {
     }
 
     @Override
-    public Account getById(int id) {
-        log.trace("id={}", id);
-        Account account = null;
-        try {
-            account = accountRepository.getAccountById(id);
-        } catch (SQLException e) {
-            log.warn("id={}", id, e);
-        }
-        log.trace("returning={}", account);
-        return account;
+    public Account save(Account account) {
+        return null;
     }
-
 
     @Override
     public Account add(int clientId, Account account) {
         log.trace("got={}", account);
         Account account1 = new Account();
         try {
-            account1 = accountRepository.addAccount(clientId, account);
+            account.setClient(Client.builder().id(clientId).build());
+            account1 = accountRepository.save(account);
+//            account1 = accountRepository.addAccount(clientId, account);
         } catch (SQLException e) {
             log.warn("Account was not created!", e);
         }
@@ -68,17 +73,13 @@ public class AccountServiceImpl implements AccountInterface {
         return account1;
     }
 
-    @Override
-    public Account add(Account account) {
-        return null;
-    }
 
     @Override
     public Account update(Account account) {
         log.trace("got={}", account);
 
         try {
-            accountRepository.updateAccount(account);
+            accountRepository.save(account);
         } catch (SQLException e) {
             log.warn("Account was not updated!", e);
         }
@@ -92,7 +93,7 @@ public class AccountServiceImpl implements AccountInterface {
 
         boolean success = false;
         try {
-            if (txManager.doInTransaction(() -> accountRepository.deletAccount(id))) {
+            if (txManager.doInTransaction(() -> accountRepository.delete(id))) {
                 success = true;
             }
         } catch (Exception e) {

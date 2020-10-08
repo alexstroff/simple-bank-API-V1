@@ -55,14 +55,14 @@ public class ClientRepositoryImplTest {
 //    }
 
     @Test
-    public void getClientById() throws SQLException {
+    public void getById() throws SQLException {
         Client client;
         client = clientRepository.getById(CLIENT_1_ID);
         CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
     }
 
     @Test
-    public void getAllClients() throws SQLException {
+    public void getAll() throws SQLException {
         List<Client> allClients = clientRepository.getAll();
 //        Collections.sort(allCliens, clientComparator);
         Assert.assertEquals(allClients.size(), 2);
@@ -70,7 +70,7 @@ public class ClientRepositoryImplTest {
     }
 
     @Test
-    public void addNewClient() throws SQLException {
+    public void add() throws SQLException {
         Client newClient = Client.builder()
                 .name(CLIENT_3.getName())
                 .email(CLIENT_3.getEmail())

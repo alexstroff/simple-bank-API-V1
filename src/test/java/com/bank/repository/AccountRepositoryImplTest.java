@@ -2,6 +2,7 @@ package com.bank.repository;
 
 import com.bank.ClientTestData;
 import com.bank.model.Account;
+import com.bank.model.Client;
 import com.bank.repository.utils.DBUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.RunScript;
@@ -24,12 +25,10 @@ import static com.bank.ClientTestData.*;
 public class AccountRepositoryImplTest {
 
     private static AccountRepository repository;
-    private static ClientRepository clientRepository;
 
     @BeforeClass
     public static void setup() {
         repository = new AccountRepositoryImpl();
-        clientRepository = new ClientRepositoryImpl();
     }
 
     @Before
@@ -43,21 +42,34 @@ public class AccountRepositoryImplTest {
     }
 
     @Test
+    public void getById() throws SQLException {
+        Account account = repository.getById(ACCOUNT_1_ID);
+        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, ACCOUNT_1);
+    }
+
+    @Test
+    public void getAllAccounts() throws SQLException {
+        List<Account> client1Accs = repository.getAll(CLIENT_1.getId());
+        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(client1Accs, Arrays.asList(ACCOUNT_1));
+    }
+
+    @Test
     public void addAccount() throws SQLException {
         Account account = Account.builder()
-                .client(ClientTestData.CLIENT_1)
+                .client(CLIENT_1)
                 .number("40817810500550987654")
                 .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
                 .currency("RUB")
                 .build();
 
-        List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
+        List<Account> oldAccounts = repository.getAll(CLIENT_1.getId());
         log.debug("before add={}", oldAccounts);
         Assert.assertEquals(1, oldAccounts.size());
 
-        Account newAccount = repository.addAccount(CLIENT_1.getId(), account);
+        account.setClient(Client.builder().id(CLIENT_1_ID).build());
+        Account newAccount = repository.save(account);
 
-        List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
+        List<Account> newAccounts = repository.getAll(CLIENT_1.getId());
         log.debug("after add={}", newAccounts);
         Assert.assertEquals(2, newAccounts.size());
 
@@ -67,23 +79,11 @@ public class AccountRepositoryImplTest {
     }
 
     @Test
-    public void getAllAccounts() throws SQLException {
-        List<Account> client1Accs = repository.getAllClientAccounts(CLIENT_1.getId());
-        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(client1Accs, Arrays.asList(ACCOUNT_1));
-    }
-
-    @Test
-    public void getAccById() throws SQLException {
-        Account account = repository.getAccountById(100002);
-        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, ACCOUNT_1);
-    }
-
-    @Test
     public void updateAccount() throws SQLException {
         Account account = ACCOUNT_1;
         account.setAmount(new BigDecimal(121212).setScale(2));
-        repository.updateAccount(account);
-        Account account1 = repository.getAccountById(ACCOUNT_1.getId());
+        repository.save(account);
+        Account account1 = repository.getById(ACCOUNT_1.getId());
         ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, account1);
     }
 
@@ -95,12 +95,14 @@ public class AccountRepositoryImplTest {
                 .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
                 .currency("RUB")
                 .build();
-        repository.addAccount(CLIENT_1.getId(), account);
-        List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
+        account.setClient(Client.builder().id(CLIENT_1_ID).build());
+        repository.save(account);
+//        repository.addAccount(CLIENT_1.getId(), account);
+        List<Account> oldAccounts = repository.getAll(CLIENT_1.getId());
         Assert.assertEquals(2, oldAccounts.size());
 
-        repository.deletAccount(ACCOUNT_1.getId());
-        List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
+        repository.delete(ACCOUNT_1.getId());
+        List<Account> newAccounts = repository.getAll(CLIENT_1.getId());
         oldAccounts.removeAll(newAccounts);
         Assert.assertEquals(1, oldAccounts.size());
 
@@ -108,8 +110,8 @@ public class AccountRepositoryImplTest {
 
 
     public void getEmptyAccountListException() throws SQLException {
-        repository.deletAccount(ACCOUNT_1.getId());
-        Assert.assertEquals(0, repository.getAllClientAccounts(CLIENT_1.getId()));
+        repository.delete(ACCOUNT_1.getId());
+        Assert.assertEquals(0, repository.getAll(CLIENT_1.getId()));
 
     }
 

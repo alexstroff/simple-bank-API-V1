@@ -1,12 +1,33 @@
 package com.bank.service;
 
+import java.sql.SQLException;
+
 public interface BaseService<T> {
 
+    /**
+     * Get Entity by Id.
+     *
+     * @param id
+     * @return Client.
+     * @throws SQLException
+     */
     T getById(int id);
 
-    T add(T t);
+    /**
+     * Persist Entity.
+     *
+     * @param t
+     * @return client
+     * @throws SQLException if not found or not created
+     */
+    T save(T t);
 
-    T update(T t);
-
+    /**
+     * Delete Entity by Id.
+     *
+     * @param id
+     * @return true == "success"
+     * @throws SQLException
+     */
     boolean delete(int id);
 }

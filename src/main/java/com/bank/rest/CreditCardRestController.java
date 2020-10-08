@@ -32,9 +32,10 @@ public class CreditCardRestController {
     @POST
     @Path("/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("id") int clientId, CreditCard card) {
-        System.out.println(card);
-        cardService.add(clientId, card);
+    public void add(@PathParam("id") int clientId, CreditCard card) {
+
+//        System.out.println(card);
+//        cardService.add(clientId, card);
     }
 
     @PUT

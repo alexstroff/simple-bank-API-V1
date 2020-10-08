@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
-public class CreditCardServiceImpl implements CreditCardsInterface {
+public class CreditCardServiceImpl implements CreditCardsService {
 
     private CreditCardRepositoryImpl cardRepository;
     private TxManager txManager;
@@ -19,22 +19,6 @@ public class CreditCardServiceImpl implements CreditCardsInterface {
     public CreditCardServiceImpl() {
         this.cardRepository = new CreditCardRepositoryImpl();
         this.txManager = new TxManagerImpl();
-    }
-
-
-    @Override
-    public List<CreditCard> getAll(int accountId) {
-        log.trace("id={}", accountId);
-
-        List<CreditCard> cards = null;
-        try {
-            cards = cardRepository.getAllCards(accountId);
-        } catch (SQLException e) {
-            log.warn("id={}", accountId, e);
-        }
-        log.trace("returning={}", cards);
-
-        return cards;
     }
 
     @Override
@@ -52,17 +36,31 @@ public class CreditCardServiceImpl implements CreditCardsInterface {
     }
 
     @Override
-    public CreditCard update(CreditCard card) {
-        log.trace("got={}", card);
+    public List<CreditCard> getAll(int accountId) {
+        log.trace("id={}", accountId);
 
+        List<CreditCard> cards = null;
         try {
-            cardRepository.updateCard(card);
+            cards = cardRepository.getAll(accountId);
         } catch (SQLException e) {
-            log.warn("Card was not updated!", e);
+            log.warn("id={}", accountId, e);
         }
-        log.trace("returning={}", card);
+        log.trace("returning={}", cards);
 
-        return card;
+        return cards;
+    }
+
+    @Override
+    public CreditCard save(CreditCard card) {
+        CreditCard card1 = new CreditCard();
+        try {
+            card1 = cardRepository.save(card);
+        } catch (SQLException e) {
+            log.warn("Card was not created!", e);
+        }
+        log.trace("returning={}", card1);
+
+        return card1;
     }
 
     @Override
@@ -77,41 +75,5 @@ public class CreditCardServiceImpl implements CreditCardsInterface {
         }
         log.trace("returning={}", success);
         return success;
-    }
-//
-//    @Override
-//    public CreditCard add(int accountId, CreditCard card) {
-//        log.trace("got={}", card);
-//
-//        CreditCard card1 = new CreditCard();
-//        try {
-//            card1 = cardRepository.addCard(accountId, card);
-//        } catch (SQLException e) {
-//            log.warn("Card was not created!", e);
-//        }
-//        log.trace("returning={}", card1);
-//
-//        return card1;
-//    }
-
-    @Override
-    public CreditCard add(int accountId, CreditCard card) {
-        card.setAccount(Account.builder().id(accountId).build());
-        log.trace("got={}", card);
-        CreditCard card1 = new CreditCard();
-        try {
-//            card1 = cardRepository.addCard(accountId, card);
-            card1 = cardRepository.save(card);
-        } catch (SQLException e) {
-            log.warn("Card was not created!", e);
-        }
-        log.trace("returning={}", card1);
-
-        return card1;
-    }
-
-    @Override
-    public CreditCard add(CreditCard card) {
-        return null;
     }
 }
