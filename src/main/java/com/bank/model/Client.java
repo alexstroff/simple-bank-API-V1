@@ -30,9 +30,4 @@ public class Client{
         this.registered = client.registered;
         this.accounts = client.accounts;
     }
-
-    @JsonIgnore
-    public boolean isNew() {
-        return getId() == 0;
-    }
 }

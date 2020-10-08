@@ -1,7 +1,6 @@
 package com.bank.repository;
 
 import com.bank.model.Account;
-import com.bank.model.Client;
 
 import java.sql.SQLException;
 import java.util.List;

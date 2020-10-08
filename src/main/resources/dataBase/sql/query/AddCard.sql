@@ -1,1 +1,1 @@
-insert into credit_cards (account_id, number) values ( ?, ? )
+INSERT INTO credit_cards (account_id, number) VALUES (? , ?)

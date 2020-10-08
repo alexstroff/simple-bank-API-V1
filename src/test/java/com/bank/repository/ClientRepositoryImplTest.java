@@ -2,6 +2,7 @@ package com.bank.repository;
 
 import com.bank.model.Client;
 import com.bank.repository.utils.DBUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.RunScript;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.bank.ClientTestData.*;
 
+@Slf4j
 public class ClientRepositoryImplTest {
 
     private static ClientRepository clientRepository;
@@ -60,6 +62,14 @@ public class ClientRepositoryImplTest {
     }
 
     @Test
+    public void getAllClients() throws SQLException {
+        List<Client> allClients = clientRepository.getAll();
+//        Collections.sort(allCliens, clientComparator);
+        Assert.assertEquals(allClients.size(), 2);
+        CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
+    }
+
+    @Test
     public void addNewClient() throws SQLException {
         Client newClient = Client.builder()
                 .name(CLIENT_3.getName())
@@ -96,18 +106,12 @@ public class ClientRepositoryImplTest {
                 .build();
         clientRepository.save(client);
         Client client1 = clientRepository.getById(100006);
-        clientRepository.deleteClient(100006);
+        clientRepository.delete(100006);
         List<Client> clients = clientRepository.getAll();
         CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
     }
 
-    @Test
-    public void getAllClients() throws SQLException {
-        List<Client> allClients = clientRepository.getAll();
-        Collections.sort(allClients, clientComparator);
-        Assert.assertEquals(allClients.size(), 2);
-        CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
-    }
+
 
 
 //

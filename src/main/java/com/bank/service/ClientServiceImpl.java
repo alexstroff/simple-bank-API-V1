@@ -5,16 +5,12 @@ import com.bank.repository.ClientRepository;
 import com.bank.repository.ClientRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
 import com.bank.repository.txManager.TxManagerImpl;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Slf4j
-public class ClientServiceImpl implements ClientService{
+public class ClientServiceImpl implements ClientService {
 
     private ClientRepository repository;
     private TxManager txManager;
@@ -79,7 +75,7 @@ public class ClientServiceImpl implements ClientService{
     public boolean delete(int id) {
         boolean success = false;
         try {
-            success = txManager.doInTransaction(() -> repository.deleteClient(id));
+            success = txManager.doInTransaction(() -> repository.delete(id));
         } catch (Exception e) {
             log.warn("Client was not updated!", e);
         }

@@ -1,7 +1,7 @@
 package com.bank.repository;
 
 import com.bank.model.Account;
-import com.bank.model.Client;
+import com.bank.repository.utils.SqlScripts;
 
 import java.sql.*;
 import java.util.ArrayList;

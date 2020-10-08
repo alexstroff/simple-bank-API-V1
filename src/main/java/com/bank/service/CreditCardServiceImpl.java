@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.model.Account;
 import com.bank.model.CreditCard;
 import com.bank.repository.CreditCardRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
@@ -42,7 +43,7 @@ public class CreditCardServiceImpl implements CreditCardsInterface {
 
         CreditCard card = new CreditCard();
         try {
-            card = cardRepository.getCardById(id);
+            card = cardRepository.getById(id);
         } catch (SQLException e) {
             log.warn("id={}", id, e);
         }
@@ -70,21 +71,37 @@ public class CreditCardServiceImpl implements CreditCardsInterface {
 
         boolean success = false;
         try {
-            if (txManager.doInTransaction(() -> cardRepository.deleteCard(cardId))) success = true;
+            if (txManager.doInTransaction(() -> cardRepository.delete(cardId))) success = true;
         } catch (Exception e) {
             log.warn("Card was not deleted!", e);
         }
         log.trace("returning={}", success);
         return success;
     }
+//
+//    @Override
+//    public CreditCard add(int accountId, CreditCard card) {
+//        log.trace("got={}", card);
+//
+//        CreditCard card1 = new CreditCard();
+//        try {
+//            card1 = cardRepository.addCard(accountId, card);
+//        } catch (SQLException e) {
+//            log.warn("Card was not created!", e);
+//        }
+//        log.trace("returning={}", card1);
+//
+//        return card1;
+//    }
 
     @Override
     public CreditCard add(int accountId, CreditCard card) {
+        card.setAccount(Account.builder().id(accountId).build());
         log.trace("got={}", card);
-
         CreditCard card1 = new CreditCard();
         try {
-            card1 = cardRepository.addCard(accountId, card);
+//            card1 = cardRepository.addCard(accountId, card);
+            card1 = cardRepository.save(card);
         } catch (SQLException e) {
             log.warn("Card was not created!", e);
         }

@@ -1,17 +1,16 @@
 package com.bank.repository;
 
-import com.bank.model.Account;
 import com.bank.model.CreditCard;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public interface CreditCardRepository {
+public interface CreditCardRepository extends BaseRepository<CreditCard>{
 
-    /**
-     * @param card    add new card
-     */
-    CreditCard addCard(int accountId, CreditCard card) throws SQLException;
+//    /**
+//     * @param card    add new card
+//     */
+//    CreditCard addCard(int accountId, CreditCard card) throws SQLException;
 
     /**
      * @param accountId
@@ -23,7 +22,7 @@ public interface CreditCardRepository {
      * @param cardId
      * @return find cadr by id
      */
-    CreditCard getCardById(int cardId) throws SQLException;
+//    CreditCard getCardById(int cardId) throws SQLException;
 
     /**
      * @param card update card
@@ -33,7 +32,9 @@ public interface CreditCardRepository {
     /**
      * @return delete card
      */
-    boolean deleteCard(int cardId) throws SQLException;
+//    boolean deleteCard(int cardId) throws SQLException;
+
+
 
 
 }

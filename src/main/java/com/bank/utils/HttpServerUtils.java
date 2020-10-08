@@ -1,10 +1,8 @@
 package com.bank.utils;
 
-import com.bank.repository.ResourceReader;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.h2.jdbcx.JdbcDataSource;
 
 import java.net.URI;
 

@@ -1,6 +1,5 @@
 package com.bank.repository.utils;
 
-import com.bank.repository.ResourceReader;
 import org.h2.jdbcx.JdbcDataSource;
 
 import javax.sql.DataSource;

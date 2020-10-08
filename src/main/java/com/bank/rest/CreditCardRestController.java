@@ -41,7 +41,7 @@ public class CreditCardRestController {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     public void update(Account account){
-        cardService.update(account);
+//        cardService.update(account);
     }
 
 
