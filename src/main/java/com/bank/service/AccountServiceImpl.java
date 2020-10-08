@@ -11,14 +11,14 @@ import com.bank.repository.txManager.TxManagerImpl;
 import java.sql.SQLException;
 import java.util.List;
 
-public class AccountService implements ServiceIntf {
+public class AccountServiceImpl implements AccountInterface {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
     private TxManager txManager;
 
 
-    public AccountService() {
+    public AccountServiceImpl() {
         this.accountRepository = new AccountRepositoryImpl();
         this.clientRepository = new ClientRepositoryImpl();
         this.txManager = new TxManagerImpl();
@@ -48,37 +48,36 @@ public class AccountService implements ServiceIntf {
 
 
     @Override
-    public void add(Object o, Object b) {
-        int clientId = (int) o;
-        Account account = (Account) b;
+    public Account add(int clientId, Account account) {
+        Account account1 = new Account();
         try {
-            accountRepository.addAccount(clientId, account);
+            account1 = accountRepository.addAccount(clientId, account);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
+        return account1;
     }
 
     @Override
-    public void add(Object o) {
-
+    public Account add(Account account) {
+        return null;
     }
 
     @Override
-    public void update(Object o) {
-        Account account = (Account) o;
+    public Account update(Account account) {
+
         try {
             accountRepository.updateAccount(account);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return account;
     }
 
     @Override
-    public boolean delete(Object o) {
-        int id = (int) o;
+    public boolean delete(int id) {
         try {
-            if (txManager.doInTransaction(() -> accountRepository.deletAccount(id))){
+            if (txManager.doInTransaction(() -> accountRepository.deletAccount(id))) {
                 return true;
             }
         } catch (Exception e) {
@@ -86,9 +85,4 @@ public class AccountService implements ServiceIntf {
         }
         return false;
     }
-
-
-
-
-
 }

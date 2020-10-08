@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.model.Client;
 import com.bank.model.CreditCard;
 import com.bank.repository.CreditCardRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
@@ -8,15 +9,16 @@ import com.bank.repository.txManager.TxManagerImpl;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CreditCardService implements ServiceIntf {
+public class CreditCardServiceImpl implements CreditCardsInterface {
 
     private CreditCardRepositoryImpl cardRepository;
     private TxManager txManager;
 
-    public CreditCardService() {
+    public CreditCardServiceImpl() {
         this.cardRepository = new CreditCardRepositoryImpl();
         this.txManager = new TxManagerImpl();
     }
+
 
     @Override
     public List<CreditCard> getAll(int accountId) {
@@ -41,19 +43,17 @@ public class CreditCardService implements ServiceIntf {
     }
 
     @Override
-    public void update(Object o) {
-        CreditCard card = (CreditCard) o;
+    public CreditCard update(CreditCard card) {
         try {
             cardRepository.updateCard(card);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
+        return card;
     }
 
     @Override
-    public boolean delete(Object o) {
-        int cardId = (int) o;
+    public boolean delete(int cardId) {
         try {
             if (txManager.doInTransaction(() -> cardRepository.deleteCard(cardId))) return true;
         } catch (Exception e) {
@@ -63,18 +63,18 @@ public class CreditCardService implements ServiceIntf {
     }
 
     @Override
-    public void add(Object o, Object b) {
-        int accountId = (int) o;
-        CreditCard card = (CreditCard) b;
+    public CreditCard add(int accountId, CreditCard card) {
+        CreditCard card1 = new CreditCard();
         try {
-            cardRepository.addCard(accountId, card);
+             card1 = cardRepository.addCard(accountId, card);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return card1;
     }
 
     @Override
-    public void add(Object o) {
-
+    public CreditCard add(CreditCard card) {
+        return null;
     }
 }

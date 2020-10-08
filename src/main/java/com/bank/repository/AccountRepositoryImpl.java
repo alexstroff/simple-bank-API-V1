@@ -13,17 +13,26 @@ import static com.bank.repository.utils.DBUtils.getSQLPath;
 public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
-    public void addAccount(int clientId, Account account) throws SQLException {
+    public Account addAccount(int clientId, Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.ADD_ACCOUNT.getPath());
 
         try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, clientId);
             ps.setString(2, account.getNumber());
             ps.setBigDecimal(3, account.getAmount());
             ps.setString(4, account.getCurrency());
-            ps.execute();
+            ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    account.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating account failed, no ID obtained.");
+                }
+            }
         }
+        return account;
     }
 
 //    @Override
@@ -117,13 +126,14 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateAccount(Account account) throws SQLException {
+    public Account updateAccount(Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.UPDATE_ACCOUNT.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(2, account.getId());
             stmt.setBigDecimal(1, account.getAmount());
             stmt.execute();
         }
+        return account;
     }
 
     @Override

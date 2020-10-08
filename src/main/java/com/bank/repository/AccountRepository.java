@@ -13,7 +13,7 @@ public interface AccountRepository {
      * @param account
      * @throws SQLException add account
      */
-    void addAccount(int clientId, Account account) throws SQLException;
+    Account addAccount(int clientId, Account account) throws SQLException;
 
     /**
      * @return
@@ -48,7 +48,7 @@ public interface AccountRepository {
     /**
      * @param account update account
      */
-    void updateAccount(Account account) throws SQLException;
+    Account updateAccount(Account account) throws SQLException;
 
     /**
      * @return delete account

@@ -3,7 +3,7 @@ package com.bank.rest;
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
 import com.bank.rest.JacksonUtils.JacksonUtils;
-import com.bank.service.CreditCardService;
+import com.bank.service.CreditCardServiceImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,10 +11,10 @@ import javax.ws.rs.core.MediaType;
 @Path("client/account/card")
 public class CreditCardRestController {
 
-    private CreditCardService cardService;
+    private CreditCardServiceImpl cardService;
 
     public CreditCardRestController() {
-        this.cardService = new CreditCardService();
+        this.cardService = new CreditCardServiceImpl();
     }
 
     @GET

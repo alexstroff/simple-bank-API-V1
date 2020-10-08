@@ -3,10 +3,7 @@ package com.bank.repository;
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +12,23 @@ import static com.bank.repository.utils.DBUtils.*;
 public class CreditCardRepositoryImpl implements CreditCardRepository {
 
     @Override
-    public void addCard(int accountId, CreditCard card) throws SQLException {
+    public CreditCard addCard(int accountId, CreditCard card) throws SQLException {
         String sql = getSQLPath(SqlScripts.ADD_CARD.getPath());
         try (Connection connection = getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, accountId);
             stmt.setString(2, card.getNumber());
-            stmt.execute();
+            stmt.executeUpdate();
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    card.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating account failed, no ID obtained.");
+                }
+            }
         }
+        return card;
     }
 
     @Override
