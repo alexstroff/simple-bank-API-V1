@@ -11,7 +11,7 @@ public interface CreditCardRepository {
     /**
      * @param card    add new card
      */
-    void addCard(int accountId, CreditCard card) throws SQLException;
+    CreditCard addCard(int accountId, CreditCard card) throws SQLException;
 
     /**
      * @param accountId
