@@ -1,27 +1,38 @@
 package com.bank.service;
 
+import com.bank.AccountTestData;
+import com.bank.model.Account;
+import com.bank.model.Client;
+import com.bank.model.CreditCard;
 import com.bank.repository.utils.DBUtils;
 import org.h2.tools.RunScript;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.bank.AccountTestData.ACCOUNT_1;
+import static com.bank.AccountTestData.ACCOUNT_MATCHER_WITHOUT_CLIENT;
 
 public class AccountServiceTest {
-
     private static AccountService service;
 
     @BeforeClass
     public static void setup() {
-        service = new AccountService(DBUtils.getDataSource());
+        service = new AccountService();
     }
 
     @Before
     public void setUp() throws Exception {
-        try (Connection connection = DBUtils.getConnection()){
+        try (Connection connection = DBUtils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {
@@ -29,37 +40,53 @@ public class AccountServiceTest {
         }
     }
 
-//    @Test
-//    public void checkBalance() {
-//        BigDecimal balance = service.(ACCOUNT_1);
-//        Assert.assertEquals(0, ACCOUNT_1.getAmount().compareTo(balance));
-//    }
-//
-//    @Test
-//    public void depositeFunds() {
-//        BigDecimal deposite = new BigDecimal(3000);
-//        BigDecimal balance = service.checkBalance(ACCOUNT_1).add(deposite);
-//        service.depositeFunds(ACCOUNT_1, deposite);
-//        BigDecimal newBalance = service.checkBalance(ACCOUNT_1);
-//        Assert.assertEquals(0, newBalance.compareTo(balance));
-//
-//    }
-//
-//    @Test
-//    public void getListOfCreditCards() {
-//        List<CreditCard> clientOneCards = service.getListOfCreditCards(CLIENT_1);
-//        Assert.assertEquals(1, clientOneCards.size());
-//        CARD_MATCHER.assertMatch(clientOneCards.get(0), CARD_1);
-//    }
-//
-//    @Test
-//    public void creditCardIssue() {
-//        List<CreditCard> cardList = service.getListOfCreditCards(CLIENT_1);
-//        CreditCard issuedCard = service.creditCardIssue(ACCOUNT_1);
-//        List<CreditCard> newCardList = service.getListOfCreditCards(CLIENT_1);
-//        Assert.assertEquals(cardList.size() + 1, newCardList.size());
-//
-//        newCardList.removeAll(cardList);
-//        CARD_MATCHER.assertMatch(newCardList.get(0), issuedCard);
-//    }
+    @Test
+    public void getAll() {
+//            Vasay, vasyaTheGreat@mail.ru, //100_000
+//            100000, 1111111111, 1000, RUB, //100_002
+        Client client = Client.builder().id(100000).name("Vasay").email("vasyaTheGreat@mail.ru").build();
+        Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(2)).currency("RUB").build();
+        List<Account> accounts = new ArrayList<>();
+        accounts.add(account);
+        List<Account> accounts1 = service.getAll(client.getId());
+        AccountTestData.ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(accounts, accounts1);
+
+    }
+
+    @Test
+    public void getById() {
+        Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(1)).currency("RUB").build();
+        Account account1 = service.getById(account.getId());
+        Assert.assertEquals(account, account1);
+    }
+
+    @Test
+    public void addNew() {
+        Account account = Account.builder().id(100006).number("1111111111").amount(new BigDecimal(1000).setScale(1)).currency("RUB").build();
+        service.add(100000, account);
+        Account account1 = service.getById(100006);
+        Assert.assertEquals(account,account1);
+    }
+
+    @Test
+    public void update() {
+        Account account = Account.builder().id(100006).number("1111111111").amount(new BigDecimal(9000)).currency("RUB").build();
+        service.add(100000, account);
+        account.setAmount(new BigDecimal(2000).setScale(1));
+        service.update(account);
+        Account account1 = service.getById(100006);
+        Assert.assertEquals(account, account1);
+    }
+
+    @Test
+    public void delete() {
+        Client client = Client.builder().id(100000).name("Vasay").email("vasyaTheGreat@mail.ru").build();
+        Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(2)).currency("RUB").build();
+        List<Account> accounts = service.getAll(client.getId());
+        service.delete(account);
+        List<Account> accounts1 = service.getAll(client.getId());
+        Assert.assertNotEquals(accounts, account);
+
+    }
+
 }

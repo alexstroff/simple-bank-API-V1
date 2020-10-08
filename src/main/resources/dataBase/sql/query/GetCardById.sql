@@ -1,1 +1,1 @@
-select number, registered from CREDIT_CARDS where id = ?
+select id, number, registered from credit_cards where id = ?

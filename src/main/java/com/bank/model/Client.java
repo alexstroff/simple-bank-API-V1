@@ -15,7 +15,7 @@ import java.util.List;
 @JsonIgnoreProperties({"accounts"})
 public class Client{
 
-    private Integer id;
+    private int id;
     private String name;
     private String email;
 
@@ -33,6 +33,6 @@ public class Client{
 
     @JsonIgnore
     public boolean isNew() {
-        return getId() == null;
+        return getId() == 0;
     }
 }

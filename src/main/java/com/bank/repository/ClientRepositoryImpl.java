@@ -15,14 +15,15 @@ public class ClientRepositoryImpl implements ClientRepository {
 //            "(SELECT clients_id FROM accounts WHERE id = ?)";
 
     @Override
-    public Client getClientById(Integer id) throws SQLException {
+    public Client getById(Integer id) throws SQLException {
         String sql = getSQLPath(SqlScripts.GET_CLIENT_BY_ID.getPath());
+        Client client = null;
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Client.builder()
+                client = Client.builder()
                         .id(rs.getInt(1))
                         .name(rs.getString(2))
                         .email(rs.getString(3))
@@ -30,7 +31,11 @@ public class ClientRepositoryImpl implements ClientRepository {
                         .build();
             }
         }
-        return new Client();
+        if (client == null) {
+            throw new SQLException("Client with Id=" + id + ", not found");
+        } else {
+            return client;
+        }
     }
 
     @Override
@@ -39,7 +44,6 @@ public class ClientRepositoryImpl implements ClientRepository {
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet resultSet = ps.executeQuery();
-
             List<Client> clientList = new ArrayList<>();
             while (resultSet.next()) {
                 Client client = new Client();
@@ -56,7 +60,6 @@ public class ClientRepositoryImpl implements ClientRepository {
     @Override
     public Client save(Client client) throws SQLException {
         String sql;
-
         if (client.isNew()) {
             sql = getSQLPath(SqlScripts.SAVE_CLIENT.getPath());
             try (PreparedStatement ps = DBUtils.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -78,11 +81,10 @@ public class ClientRepositoryImpl implements ClientRepository {
                 ps.setString(1, client.getName());
                 ps.setString(2, client.getEmail());
                 ps.setInt(3, client.getId());
-                int i = ps.executeUpdate();
-
-                if (i < 1) {
-                    throw new SQLException("Updating user with Id = " + client.getId()
-                            + ", was not found, updating failed.");
+                int success = ps.executeUpdate();
+                if (success < 1) {
+                    throw new SQLException("Updating client with Id = " + client.getId()
+                            + ", was not found. Updating failed.");
                 }
             }
         }
@@ -98,7 +100,12 @@ public class ClientRepositoryImpl implements ClientRepository {
             ps.setInt(1, id);
             success = ps.executeUpdate();
         }
-        return success > 0;
+        if (success < 1) {
+            throw new SQLException("Deleting client with Id = " + id
+                    + ", was not found. Deleting failed.");
+        } else {
+            return true;
+        }
     }
 
 //    @Override
@@ -138,7 +145,4 @@ public class ClientRepositoryImpl implements ClientRepository {
 //        } else return client;
 //    }
 
-    private Connection getConnection() throws SQLException {
-        return DBUtils.getConnection();
-    }
 }

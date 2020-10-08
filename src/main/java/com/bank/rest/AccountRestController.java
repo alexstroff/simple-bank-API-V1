@@ -1,22 +1,28 @@
 package com.bank.rest;
 
 
-import com.bank.repository.utils.DBUtils;
+import com.bank.model.Account;
+import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.AccountService;
+import com.bank.service.ClientServiceImpl;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-@Path(AccountRestController.REST_URL)
+@Path("client/account")
 public class AccountRestController {
 
     //todo Боль!!! Спросить о зависимостях
-    private AccountService accountService = new AccountService(DBUtils.getDataSource());
+//    private AccountService accountService = new AccountService(DBUtils.getDataSource());
+//    private ClientService clientService = new ClientService();
 
+    private AccountService accountService;
+    private ClientServiceImpl clientService;
+
+    public AccountRestController() {
+        this.accountService = new AccountService();
+        this.clientService = new ClientServiceImpl();
+    }
 
     static final String REST_URL = "account";
 
@@ -27,25 +33,38 @@ public class AccountRestController {
      * @return String that will be returned as a text/plain response.
      */
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
-//        System.out.println(accountService);
-        return "Account got it!";
+    @Path("/all/{id}")
+    public String getAll(@PathParam("id") int id) {
+        return JacksonUtils.writeValue(accountService.getAll(id));
     }
 
     @GET
     @Path("/{id}")
-    public Response get(@PathParam("id") long id) {
-//        try {
-//            Account acc = new Account(100002, null, "1111111111", 1000d, "RUB");
-//            Double balance = accountService.checkBalance(acc);
-//            System.out.println(balance);
-//            return Response.ok(accountService.checkBalance(acc)).build();
-//        } catch (Exception e) {
-//            return Response.noContent().build();
-//        }
-        return null;
+    public String getById(@PathParam("id") int id) {
+        return JacksonUtils.writeValue(accountService.getById(id));
+    }
+
+    @POST
+    @Path("/add/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addAccount(@PathParam("id") int clientId, Account account) {
+        System.out.println(account);
+        accountService.add(clientId, account);
+    }
+
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void update(Account account){
+        accountService.update(account);
     }
 
 
+    @DELETE
+    @Path("/delete/{id}")
+    public String deleteAccount(@PathParam("id") int id) {
+        if (accountService.delete(id)) {
+            return "true";
+        } else return "true";
+    }
 }

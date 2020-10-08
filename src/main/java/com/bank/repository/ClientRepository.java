@@ -14,7 +14,7 @@ public interface ClientRepository {
      * @return Client.
      * @throws SQLException
      */
-    Client getClientById(Integer id) throws SQLException;
+    Client getById(Integer id) throws SQLException;
 
     /**
      * Returns all Clients.
