@@ -14,9 +14,7 @@ interface ServiceInterface<T>{
 
      void update(Object o);
 
-//     void save(Object o);
-
-     T delete(Object o);
+     boolean delete(Object o);
 
      void add(Object o, Object b);
 

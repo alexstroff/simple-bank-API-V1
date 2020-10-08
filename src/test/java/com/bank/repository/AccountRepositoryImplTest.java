@@ -49,9 +49,9 @@ public class AccountRepositoryImplTest {
                     .currency("RUB")
                     .build();
 
-            List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
+            List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
             repository.addAccount(CLIENT_1.getId(), account);
-            List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1);
+            List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
             newAccounts.removeAll(oldAccounts);
             Assert.assertEquals(1, newAccounts.size());
 
@@ -62,7 +62,7 @@ public class AccountRepositoryImplTest {
 
     @Test
     public void getAllAccounts() throws SQLException {
-            List<Account> client1Accs = repository.getAllClientAccounts(CLIENT_1);
+            List<Account> client1Accs = repository.getAllClientAccounts(CLIENT_1.getId());
             ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(client1Accs, Arrays.asList(ACCOUNT_1));
     }
 
@@ -90,11 +90,11 @@ public class AccountRepositoryImplTest {
                 .currency("RUB")
                 .build();
         repository.addAccount(CLIENT_1.getId(), account);
-        List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
+        List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
         Assert.assertEquals(2, oldAccounts.size());
 
-        repository.deletAccount(ACCOUNT_1);
-        List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1);
+        repository.deletAccount(ACCOUNT_1.getId());
+        List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
         oldAccounts.removeAll(newAccounts);
         Assert.assertEquals(1, oldAccounts.size());
 
@@ -102,8 +102,8 @@ public class AccountRepositoryImplTest {
 
     @Test(expected = SQLException.class)
     public void getEmptyAccountListException() throws SQLException {
-        repository.deletAccount(ACCOUNT_1);
-        repository.getAllClientAccounts(CLIENT_1);
+        repository.deletAccount(ACCOUNT_1.getId());
+        repository.getAllClientAccounts(CLIENT_1.getId());
 
     }
 

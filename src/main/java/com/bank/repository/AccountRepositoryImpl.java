@@ -62,9 +62,9 @@ public class AccountRepositoryImpl implements AccountRepository {
             if (rs.next()) {
                 Account account = Account.builder()
                         .id(rs.getInt(1))
-                        .number(rs.getString("number"))
-                        .amount(rs.getBigDecimal("amount"))
-                        .currency(rs.getString("currency"))
+                        .number(rs.getString(2))
+                        .amount(rs.getBigDecimal(3))
+                        .currency(rs.getString(4))
                         .build();
                 return account;
             }
@@ -96,27 +96,23 @@ public class AccountRepositoryImpl implements AccountRepository {
 //    }
 
     @Override
-    public List<Account> getAllClientAccounts(Client client) throws SQLException {
+    public List<Account> getAllClientAccounts(int clientId) throws SQLException {
         String sql = getSQLPath(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, client.getId());
+            stmt.setInt(1, clientId);
             ResultSet rs = stmt.executeQuery();
             List<Account> accounts = new ArrayList<>();
             while (rs.next()) {
                 Account account = Account.builder()
                         .id(rs.getInt("id"))
-                        .client(client)
+//                        .client(client)
                         .number(rs.getString("number"))
                         .amount(rs.getBigDecimal("amount").setScale(2))
                         .currency(rs.getString("currency"))
                         .build();
                 accounts.add(account);
             }
-            if (accounts.isEmpty()) {
-                throw new SQLException("Not found any account!");
-            } else {
-                return accounts;
-            }
+            return accounts;
         }
     }
 
@@ -124,17 +120,17 @@ public class AccountRepositoryImpl implements AccountRepository {
     public void updateAccount(Account account) throws SQLException {
         String sql = getSQLPath(SqlScripts.UPDATE_ACCOUNT.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, account.getId());
-            stmt.setBigDecimal(2, account.getAmount());
+            stmt.setInt(2, account.getId());
+            stmt.setBigDecimal(1, account.getAmount());
             stmt.execute();
         }
     }
 
     @Override
-    public boolean deletAccount(Account account) throws SQLException {
+    public boolean deletAccount(int id) throws SQLException {
         String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, account.getId());
+            stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
             if (rows != 0) return true;
         }

@@ -15,22 +15,22 @@ import static com.bank.repository.utils.DBUtils.*;
 public class CreditCardRepositoryImpl implements CreditCardRepository {
 
     @Override
-    public void addCard(Account account, CreditCard card) throws SQLException {
+    public void addCard(int accountId, CreditCard card) throws SQLException {
         String sql = getSQLPath(SqlScripts.ADD_CARD.getPath());
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, account.getId());
+            stmt.setInt(1, accountId);
             stmt.setString(2, card.getNumber());
             stmt.execute();
         }
     }
 
     @Override
-    public List<CreditCard> getAllCards(Account account) throws SQLException {
+    public List<CreditCard> getAllCards(int accountId) throws SQLException {
         String sql = getSQLPath(SqlScripts.FIND_ALL_CARDS_BY_ACCOUNT_ID.getPath());
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, account.getId());
+            stmt.setInt(1, accountId);
             ResultSet rs = stmt.executeQuery();
             List<CreditCard> creditCards = new ArrayList<>();
             while (rs.next()) {
@@ -41,25 +41,23 @@ public class CreditCardRepositoryImpl implements CreditCardRepository {
                         .build();
                 creditCards.add(card);
             }
-            if ((creditCards.isEmpty())) {
-                throw new SQLException("Not found any client!");
-            } else return creditCards;
+            return creditCards;
         }
     }
 
     @Override
-    public CreditCard getCardById(CreditCard card) throws SQLException {
+    public CreditCard getCardById(int cardId) throws SQLException {
         String sql = getSQLPath(SqlScripts.FIND_CARD_BY_ID.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmp = connection.prepareStatement(sql)) {
-            stmp.setInt(1, card.getId());
+            stmp.setInt(1, cardId);
             ResultSet rs = stmp.executeQuery();
             if (rs.next()) {
                 CreditCard card1 = CreditCard.builder()
-                        .id(rs.getInt("id"))
-                        .number(rs.getString("number"))
-                        .registered(rs.getDate("registered"))
+                        .id(rs.getInt(1))
+                        .number(rs.getString(2))
+                        .registered(rs.getDate(3))
                         .build();
-                return card;
+                return card1;
             }
         }
         return CreditCard.builder().id(-1).build();
@@ -77,11 +75,11 @@ public class CreditCardRepositoryImpl implements CreditCardRepository {
     }
 
     @Override
-    public boolean deleteCard(CreditCard card) throws SQLException {
+    public boolean deleteCard(int cardId) throws SQLException {
         String sql = getSQLPath(SqlScripts.DELETE_CARD.getPath());
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, card.getId());
+            stmt.setInt(1, cardId);
             int rows = stmt.executeUpdate();
             if (rows != 0) return true;
         }
