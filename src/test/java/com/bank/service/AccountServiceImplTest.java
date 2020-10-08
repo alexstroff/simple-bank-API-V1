@@ -69,7 +69,7 @@ public class AccountServiceImplTest {
         Account account = Account.builder().id(100006).number("1111111111").amount(new BigDecimal(9000)).currency("RUB").build();
         service.add(100000, account);
         account.setAmount(new BigDecimal(2000).setScale(1));
-        service.update(account);
+        service.update(100000, account);
         Account account1 = service.getById(100006);
         Assert.assertEquals(account, account1);
     }

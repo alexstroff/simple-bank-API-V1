@@ -2,25 +2,28 @@ package com.bank.rest;
 
 
 import com.bank.model.Account;
+import com.bank.model.to.AccountTO;
+import com.bank.model.utils.EntityUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.AccountServiceImpl;
 import com.bank.service.ClientServiceImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-@Path("client/account")
+@Path("client/{clientId}/account")
 public class AccountRestController {
 
     //todo Боль!!! Спросить о зависимостях
 //    private AccountService accountService = new AccountService(DBUtils.getDataSource());
 //    private ClientService clientService = new ClientService();
 
-    private AccountServiceImpl accountServiceImpl;
+    private AccountServiceImpl accountService;
     private ClientServiceImpl clientService;
 
     public AccountRestController() {
-        this.accountServiceImpl = new AccountServiceImpl();
+        this.accountService = new AccountServiceImpl();
         this.clientService = new ClientServiceImpl();
     }
 
@@ -33,38 +36,40 @@ public class AccountRestController {
      * @return String that will be returned as a text/plain response.
      */
     @GET
-    @Path("/all/{id}")
-    public String getAll(@PathParam("id") int id) {
-        return JacksonUtils.writeValue(accountServiceImpl.getAll(id));
+    @Path("/all")
+    public String getAll(@PathParam("clientId") int id) {
+        List<AccountTO> accountsTO = EntityUtils.fromAccountToAccountTO(accountService.getAll(id));
+        return JacksonUtils.writeValue(accountsTO);
     }
 
     @GET
     @Path("/{id}")
-    public String getById(@PathParam("id") int id) {
-        return JacksonUtils.writeValue(accountServiceImpl.getById(id));
+    public String getById(@PathParam("id") int id, @PathParam("clientId") int clientId) {
+        Account account = accountService.getById(clientId, id);
+        AccountTO accountTO = EntityUtils.fromAccountToAccountTO(account);
+        return JacksonUtils.writeValue(accountTO);
     }
 
     @POST
-    @Path("/add/{id}")
+    @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("id") int clientId, Account account) {
-        System.out.println(account);
-        accountServiceImpl.add(clientId, account);
+    public void addAccount(@PathParam("clientId") int clientId, Account account) {
+        accountService.add(clientId, account);
     }
 
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(Account account){
-        accountServiceImpl.update(account);
+    public void update(@PathParam("clientId") int clientId, Account account) {
+        accountService.update(clientId, account);
     }
 
 
     @DELETE
     @Path("/delete/{id}")
-    public String deleteAccount(@PathParam("id") int id) {
-        if (accountServiceImpl.delete(id)) {
+    public String deleteAccount(@PathParam("clientId") int clientId, @PathParam("id") int id) {
+        if (accountService.delete(clientId, id)) {
             return "true";
-        } else return "true";
+        } else return "false";
     }
 }
