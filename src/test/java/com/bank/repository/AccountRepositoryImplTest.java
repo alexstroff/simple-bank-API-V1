@@ -49,10 +49,10 @@ public class AccountRepositoryImplTest {
                     .currency("RUB")
                     .build();
 
-            List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
+            List<Account> allAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
             repository.addAccount(CLIENT_1.getId(), account);
             List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1.getId());
-            newAccounts.removeAll(oldAccounts);
+            newAccounts.removeAll(allAccounts);
             Assert.assertEquals(1, newAccounts.size());
 
             Account newAccount = newAccounts.get(0);
