@@ -44,10 +44,10 @@ public class AccountRestControllerTest {
         server.stop();
     }
 
-//    @Test
-//    public void getIt() {
+    @Test
+    public void getIt() {
 //        String responseMsg = target.path("account").request().get(String.class);
 //            assertEquals("Account got it!", responseMsg);
-//    }
+    }
 
 }
