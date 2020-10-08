@@ -2,6 +2,7 @@ package com.bank.repository;
 
 import com.bank.model.Client;
 import com.bank.repository.utils.DBUtils;
+import com.bank.repository.utils.SqlScripts;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 //            "(SELECT clients_id FROM accounts WHERE id = ?)";
 
     @Override
-    public Client getById(Integer id) throws SQLException {
+    public Client getById(int id) throws SQLException {
         String sql = getSQLPath(SqlScripts.GET_CLIENT_BY_ID.getPath());
         Client client = null;
         try (Connection connection = getConnection();
@@ -60,7 +61,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     @Override
     public Client save(Client client) throws SQLException {
         String sql;
-        if (client.isNew()) {
+        if (client.getId() < 1) {
             sql = getSQLPath(SqlScripts.SAVE_CLIENT.getPath());
             try (PreparedStatement ps = DBUtils.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, client.getName());
@@ -92,7 +93,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public boolean deleteClient(Integer id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = getSQLPath(SqlScripts.DELETE_CLIENT.getPath());
         Integer success = null;
         try (Connection connection = getConnection();

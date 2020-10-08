@@ -3,7 +3,6 @@ package com.bank.service;
 import com.bank.AccountTestData;
 import com.bank.model.Account;
 import com.bank.model.Client;
-import com.bank.model.CreditCard;
 import com.bank.repository.utils.DBUtils;
 import org.h2.tools.RunScript;
 import org.junit.Assert;
@@ -19,15 +18,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bank.AccountTestData.ACCOUNT_1;
-import static com.bank.AccountTestData.ACCOUNT_MATCHER_WITHOUT_CLIENT;
-
-public class AccountServiceTest {
-    private static AccountService service;
+public class AccountServiceImplTest {
+    private static AccountServiceImpl service;
 
     @BeforeClass
     public static void setup() {
-        service = new AccountService();
+        service = new AccountServiceImpl();
     }
 
     @Before
@@ -83,7 +79,7 @@ public class AccountServiceTest {
         Client client = Client.builder().id(100000).name("Vasay").email("vasyaTheGreat@mail.ru").build();
         Account account = Account.builder().id(100002).number("1111111111").amount(new BigDecimal(1000).setScale(2)).currency("RUB").build();
         List<Account> accounts = service.getAll(client.getId());
-        service.delete(account);
+        service.delete(account.getId());
         List<Account> accounts1 = service.getAll(client.getId());
         Assert.assertNotEquals(accounts, account);
 

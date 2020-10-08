@@ -5,14 +5,12 @@ import com.bank.repository.ClientRepository;
 import com.bank.repository.ClientRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
 import com.bank.repository.txManager.TxManagerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-public class ClientServiceImpl implements ClientService{
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+@Slf4j
+public class ClientServiceImpl implements ClientService {
 
     private ClientRepository repository;
     private TxManager txManager;
@@ -24,14 +22,14 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Client getById(int id) {
-        logger.trace("id={}", id);
+        log.trace("id={}", id);
         Client client = null;
         try {
             client = txManager.doInTransaction(() -> repository.getById(id));
         } catch (Exception e) {
-            logger.warn("id={}", id, e);
+            log.warn("id={}", id, e);
         }
-        logger.trace("returning={}", client);
+        log.trace("returning={}", client);
         return client;
     }
 
@@ -41,35 +39,35 @@ public class ClientServiceImpl implements ClientService{
         try {
             clientList = txManager.doInTransaction(() -> repository.getAll());
         } catch (Exception e) {
-            logger.warn("", e);
+            log.warn("", e);
         }
-        logger.trace("returning={}", clientList);
+        log.trace("returning={}", clientList);
         return clientList;
     }
 
     @Override
     public Client add(Client client) {
-        logger.trace("got={}", client);
+        log.trace("got={}", client);
         Client newClient = null;
         try {
             newClient = txManager.doInTransaction(() -> repository.save(client));
         } catch (Exception e) {
-            logger.warn("Client was not created!", e);
+            log.warn("Client was not created!", e);
         }
-        logger.trace("returning={}", newClient);
+        log.trace("returning={}", newClient);
         return newClient;
     }
 
     @Override
     public Client update(Client client) {
-        logger.trace("got={}", client);
+        log.trace("got={}", client);
         try {
             Client finalClient = client;
             client = txManager.doInTransaction(() -> repository.save(finalClient));
         } catch (Exception e) {
-            logger.warn("Client was not updated!", e);
+            log.warn("Client was not updated!", e);
         }
-        logger.trace("returning={}", client);
+        log.trace("returning={}", client);
         return client;
     }
 
@@ -77,11 +75,11 @@ public class ClientServiceImpl implements ClientService{
     public boolean delete(int id) {
         boolean success = false;
         try {
-            success = txManager.doInTransaction(() -> repository.deleteClient(id));
+            success = txManager.doInTransaction(() -> repository.delete(id));
         } catch (Exception e) {
-            logger.warn("Client was not updated!", e);
+            log.warn("Client was not updated!", e);
         }
-        logger.trace("returning={}", success);
+        log.trace("returning={}", success);
         return success;
     }
 

@@ -1,4 +1,4 @@
-package com.bank.repository;
+package com.bank.repository.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

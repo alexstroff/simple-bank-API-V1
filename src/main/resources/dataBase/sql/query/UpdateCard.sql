@@ -1,1 +1,1 @@
-update credit_cards set number = ? where id = ?
+UPDATE credit_cards SET number = ? WHERE id = ?

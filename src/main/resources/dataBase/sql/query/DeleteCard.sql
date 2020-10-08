@@ -1,1 +1,1 @@
-delete from credit_cards where id = ?
+DELETE FROM credit_cards WHERE id = ?
