@@ -19,7 +19,7 @@ public class CreditCardRestController {
 
     @GET
     @Path("/all/{id}")
-    public String getAll(@PathParam("id") int id){
+    public String getAll(@PathParam("id") int id) {
         return JacksonUtils.writeValue(cardService.getAll(id));
     }
 
@@ -32,7 +32,7 @@ public class CreditCardRestController {
     @POST
     @Path("/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("id") int clientId, CreditCard card) {
+    public void addCard(@PathParam("id") int clientId, CreditCard card) {
         System.out.println(card);
         cardService.add(clientId, card);
     }
@@ -40,14 +40,14 @@ public class CreditCardRestController {
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(Account account){
-        cardService.update(account);
+    public void update(CreditCard card) {
+        cardService.update(card);
     }
 
 
     @DELETE
     @Path("/delete/{id}")
-    public String deleteAccount(@PathParam("id") int id) {
+    public String deleteCard(@PathParam("id") int id) {
         if (cardService.delete(id)) {
             return "true";
         } else return "true";
