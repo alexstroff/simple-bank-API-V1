@@ -13,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 public class CreditCard {
-    private Integer id;
+    private int id;
     private Account account;
     private String number;
     private Date registered = new Date();

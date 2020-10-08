@@ -9,22 +9,21 @@ import java.util.List;
 public interface CreditCardRepository {
 
     /**
-     * @param account
      * @param card    add new card
      */
-    void addCard(Account account, CreditCard card) throws SQLException;
+    void addCard(int accountId, CreditCard card) throws SQLException;
 
     /**
-     * @param account
+     * @param accountId
      * @return find all account's card
      */
-    List<CreditCard> getAllCards(Account account) throws SQLException;
+    List<CreditCard> getAllCards(int accountId) throws SQLException;
 
     /**
-     * @param card
+     * @param cardId
      * @return find cadr by id
      */
-    CreditCard getCardById(CreditCard card) throws SQLException;
+    CreditCard getCardById(int cardId) throws SQLException;
 
     /**
      * @param card update card
@@ -32,10 +31,9 @@ public interface CreditCardRepository {
     void updateCard(CreditCard card) throws SQLException;
 
     /**
-     * @param card
      * @return delete card
      */
-    boolean deleteCard(CreditCard card) throws SQLException;
+    boolean deleteCard(int cardId) throws SQLException;
 
 
 }
