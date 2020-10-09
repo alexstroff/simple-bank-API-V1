@@ -80,9 +80,6 @@ public class CreditCardRestController {
     public Response deleteAccount(@PathParam("clientId") int clientId,
                                 @PathParam("accountId") int accountId,
                                 @PathParam("id") int cardId) {
-//        if (service.delete(clientId, accountId, id)) {
-//            return "true";
-//        } else return "true";
         return service.delete(clientId, accountId, cardId) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
 

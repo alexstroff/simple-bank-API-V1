@@ -103,20 +103,17 @@ public class CreditCardServiceImpl implements CreditCardService {
     public boolean increaseBallance(int clientId, int accountId, int id, BigDecimal value) {
         boolean result = false;
         try {
-            result = (boolean) txManager.doInTransaction(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    List<CreditCard> allCards = repository.getAll(clientId, accountId);
-                    for (CreditCard c : allCards) {
-                        if (c.getId() == id) {
-                            Account accountById = accountRepository.getById(clientId, accountId);
-                            accountById.setAmount(accountById.getAmount().add(value));
-                            accountRepository.save(accountById);
-                            return true;
-                        }
+            result = (boolean) txManager.doInTransaction((Callable<Object>) () -> {
+                List<CreditCard> allCards = repository.getAll(clientId, accountId);
+                for (CreditCard c : allCards) {
+                    if (c.getId() == id) {
+                        Account accountById = accountRepository.getById(clientId, accountId);
+                        accountById.setAmount(accountById.getAmount().add(value));
+                        accountRepository.save(accountById);
+                        return true;
                     }
-                    return false;
                 }
+                return false;
             });
 
         } catch (SQLException e) {
@@ -131,22 +128,19 @@ public class CreditCardServiceImpl implements CreditCardService {
     public boolean reduceBallance(int clientId, int accountId, int id, BigDecimal value) {
         boolean result = false;
         try {
-            result = (boolean) txManager.doInTransaction(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    List<CreditCard> allCards = repository.getAll(clientId, accountId);
-                    for (CreditCard c : allCards) {
-                        if (c.getId() == id) {
-                            Account accountById = accountRepository.getById(clientId, accountId);
-                            if (accountById.getAmount().compareTo(value) >= 0){
-                                accountById.setAmount(accountById.getAmount().subtract(value));
-                                accountRepository.save(accountById);
-                                return true;
-                            }
+            result = (boolean) txManager.doInTransaction((Callable<Object>) () -> {
+                List<CreditCard> allCards = repository.getAll(clientId, accountId);
+                for (CreditCard c : allCards) {
+                    if (c.getId() == id) {
+                        Account accountById = accountRepository.getById(clientId, accountId);
+                        if (accountById.getAmount().compareTo(value) >= 0){
+                            accountById.setAmount(accountById.getAmount().subtract(value));
+                            accountRepository.save(accountById);
+                            return true;
                         }
                     }
-                    return false;
                 }
+                return false;
             });
 
         } catch (SQLException e) {

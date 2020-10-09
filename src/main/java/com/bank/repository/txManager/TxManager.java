@@ -4,6 +4,14 @@ import java.util.concurrent.Callable;
 
 public interface TxManager {
 
-    public <T> T doInTransaction(Callable<T> unitOfWork) throws Exception;
+    /**
+     * Runs Callable in one transaction.
+     *
+     * @param unitOfWork
+     * @param <T>
+     * @return unitOfWork
+     * @throws Exception
+     */
+    <T> T doInTransaction(Callable<T> unitOfWork) throws Exception;
 
 }
