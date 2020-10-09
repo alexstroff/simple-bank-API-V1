@@ -1,24 +1,31 @@
 package com.bank.service;
 
+import com.bank.model.Account;
 import com.bank.model.CreditCard;
+import com.bank.repository.AccountRepository;
+import com.bank.repository.AccountRepositoryImpl;
 import com.bank.repository.CreditCardRepository;
 import com.bank.repository.CreditCardRepositoryImpl;
 import com.bank.repository.txManager.TxManager;
 import com.bank.repository.txManager.TxManagerImpl;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 
     private CreditCardRepository repository;
     private TxManager txManager;
+    private AccountRepository accountRepository;
 
     public CreditCardServiceImpl() {
         this.repository = new CreditCardRepositoryImpl();
         this.txManager = new TxManagerImpl();
+        this.accountRepository = new AccountRepositoryImpl();
     }
 
     @Override
@@ -90,5 +97,63 @@ public class CreditCardServiceImpl implements CreditCardService {
         }
         log.trace("returning={}", success);
         return success;
+    }
+
+    @Override
+    public boolean increaseBallance(int clientId, int accountId, int id, BigDecimal value) {
+        boolean result = false;
+        try {
+            result = (boolean) txManager.doInTransaction(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    List<CreditCard> allCards = repository.getAll(clientId, accountId);
+                    for (CreditCard c : allCards) {
+                        if (c.getId() == id) {
+                            Account accountById = accountRepository.getById(clientId, accountId);
+                            accountById.setAmount(accountById.getAmount().add(value));
+                            accountRepository.save(accountById);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean reduceBallance(int clientId, int accountId, int id, BigDecimal value) {
+        boolean result = false;
+        try {
+            result = (boolean) txManager.doInTransaction(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    List<CreditCard> allCards = repository.getAll(clientId, accountId);
+                    for (CreditCard c : allCards) {
+                        if (c.getId() == id) {
+                            Account accountById = accountRepository.getById(clientId, accountId);
+                            if (accountById.getAmount().compareTo(value) >= 0){
+                                accountById.setAmount(accountById.getAmount().subtract(value));
+                                accountRepository.save(accountById);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

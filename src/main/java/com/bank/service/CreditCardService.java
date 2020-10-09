@@ -2,6 +2,7 @@ package com.bank.service;
 
 import com.bank.model.CreditCard;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface CreditCardService {
@@ -43,4 +44,7 @@ public interface CreditCardService {
      */
     boolean delete(int clientId, int accountId, int cardId);
 
+    boolean increaseBallance(int clientId, int accountId, int id, BigDecimal value);
+
+    boolean reduceBallance(int clientId, int accountId, int id, BigDecimal value);
 }
