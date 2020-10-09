@@ -46,20 +46,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client add(Client client) {
-        log.trace("got={}", client);
-        Client newClient = null;
-        try {
-            newClient = txManager.doInTransaction(() -> repository.save(client));
-        } catch (Exception e) {
-            log.warn("Client was not created!", e);
-        }
-        log.trace("returning={}", newClient);
-        return newClient;
-    }
-
-    @Override
-    public Client update(Client client) {
+    public Client save(Client client) {
         log.trace("got={}", client);
         try {
             Client finalClient = client;

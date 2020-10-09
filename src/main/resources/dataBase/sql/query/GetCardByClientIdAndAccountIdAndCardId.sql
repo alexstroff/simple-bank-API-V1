@@ -1,0 +1,1 @@
+SELECT id, number, registered FROM credit_cards WHERE (SELECT DISTINCT clients_id FROM accounts WHERE account_id = ? AND clients_id = ?) = ? AND account_id = ? AND id = ?

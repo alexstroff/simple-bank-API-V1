@@ -5,50 +5,41 @@ import com.bank.model.Client;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface ClientRepository extends BaseRepository<Client>{
-
-//    /**
-//     * Get Client by Id.
-//     *
-//     * @param id
-//     * @return Client.
-//     * @throws SQLException
-//     */
-//    Client getById(int id) throws SQLException;
+public interface ClientRepository {
 
     /**
-     * Returns all Clients.
+     * Get Client by Id.
+     *
+     * @param id
+     * @return Client.
+     * @throws SQLException if Client with Id not found
+     */
+    Client getById(int id) throws SQLException;
+
+    /**
+     * Returns List of Clients.
      *
      * @return List<Client>
-     * @throws SQLException
+     * @throws SQLException if DB exceptions
      */
     List<Client> getAll() throws SQLException;
 
-//    /**
-//     * Save client.
-//     *
-//     * @param client
-//     * @return client
-//     * @throws SQLException if not found or not created
-//     */
-//    Client save(Client client) throws SQLException;
+    /**
+     * Persist Client.
+     *
+     * @param client
+     * @return client
+     * @throws SQLException if Client Id not found or database did not allocate a number.
+     */
+    Client save(Client client) throws SQLException;
 
-//    /**
-//     * Delete Client by Id.
-//     *
-//     * @param id
-//     * @return true == "success"
-//     * @throws SQLException
-//     */
-//    boolean delete(Integer id) throws SQLException;
+    /**
+     * Delete Client by Id.
+     *
+     * @param id
+     * @return true if success.
+     * @throws SQLException if Client with Id not found
+     */
+    boolean delete(int id) throws SQLException;
 
-//    void addClientAccount(Client client, Account account) throws SQLException;
-
-
-//    Client getById (int clientId) throws SQLException;
-//    Client getByAccountId (int AccountId) throws SQLException;
-//
-//
-//
-//    boolean add(String name, String email) throws SQLException;
 }

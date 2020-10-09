@@ -1,1 +1,1 @@
-update accounts set amount = ? where id = ?
+UPDATE accounts SET amount = ? WHERE id = ?

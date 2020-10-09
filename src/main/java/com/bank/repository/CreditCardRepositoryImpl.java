@@ -12,29 +12,58 @@ import static com.bank.repository.utils.DBUtils.*;
 public class CreditCardRepositoryImpl implements CreditCardRepository {
 
     @Override
-    public CreditCard getById(int id) throws SQLException {
-        String sql = getSQLPath(SqlScripts.FIND_CARD_BY_ID.getPath());
-        try (Connection connection = getConnection(); PreparedStatement stmp = connection.prepareStatement(sql)) {
-            stmp.setInt(1, id);
+    public CreditCard getById(int clientId, int accountId, int creditCardId) throws SQLException {
+        //todo rewrite SQL
+        String sql = getSQLPath(SqlScripts.FIND_CARD_BY_CLIENT_ID_ACCOUNT_ID_CARD_ID.getPath());
+        CreditCard card = null;
+        try (Connection connection = getConnection();
+             PreparedStatement stmp = connection.prepareStatement(sql)) {
+            stmp.setInt(1, accountId);
+            stmp.setInt(2, clientId);
+            stmp.setInt(3, clientId);
+            stmp.setInt(4, accountId);
+            stmp.setInt(5, creditCardId);
             ResultSet rs = stmp.executeQuery();
             if (rs.next()) {
-                CreditCard card1 = CreditCard.builder()
+                card = CreditCard.builder()
                         .id(rs.getInt(1))
                         .number(rs.getString(2))
                         .registered(rs.getDate(3))
                         .build();
-                return card1;
             }
         }
-        return CreditCard.builder().id(-1).build();
+        if (card == null) {
+            throw new SQLException("CreditCard with Id=" + creditCardId + ", not found");
+        } else {
+            return card;
+        }
     }
 
+    @Override
+    public List<CreditCard> getAll(int clientId, int accountId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.GET_ALL_CARDS_BY_CLIENT_ID_ACCOUNT_ID.getPath());
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, clientId);
+            ps.setInt(2, accountId);
+            ResultSet rs = ps.executeQuery();
+            List<CreditCard> creditCards = new ArrayList<>();
+            while (rs.next()) {
+                CreditCard card = CreditCard.builder()
+                        .id(rs.getInt("id"))
+                        .number(rs.getString("number"))
+                        .registered(rs.getDate("registered"))
+                        .build();
+                creditCards.add(card);
+            }
+            return creditCards;
+        }
+    }
 
     @Override
     public CreditCard save(CreditCard creditCard) throws SQLException {
         String sql;
         if (creditCard.getId() < 1) {
-            //INSERT INTO credit_cards (account_id, number) VALUES (? , ?)
             sql = getSQLPath(SqlScripts.ADD_CARD.getPath());
             try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, creditCard.getAccount().getId());
@@ -64,66 +93,35 @@ public class CreditCardRepositoryImpl implements CreditCardRepository {
         return creditCard;
     }
 
-//INSERT INTO credit_cards (account_id, number) VALUES (? , ?)
-//    @Override
-//    public CreditCard addCard(int accountId, CreditCard card) throws SQLException {
-//        String sql = getSQLPath(SqlScripts.ADD_CARD.getPath());
-//        try (Connection connection = getConnection();
-//             PreparedStatement stmt = connection.prepareStatement(sql)) {
-//            stmt.setInt(1, accountId);
-//            stmt.setString(2, card.getNumber());
-//            stmt.execute();
-//        }
-//        return new CreditCard();
-//    }
-
-//UPDATE credit_cards SET number = ? WHERE id = ?
     @Override
-    public void updateCard(CreditCard card) throws SQLException {
-        String sql = getSQLPath(SqlScripts.UPDATE_CARD.getPath());
+    public boolean delete(int accountId, int cardId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.DELETE_CARD_BY_ACCOUNT_ID_AND_CLIENT_ID.getPath());
         try (Connection connection = getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, card.getNumber());
-            stmt.setInt(2, card.getId());
-            stmt.execute();
-        }
-    }
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            ps.setInt(2, cardId);
+            int success = ps.executeUpdate();
 
-
-    @Override
-    public boolean delete(int id) throws SQLException {
-        String sql = getSQLPath(SqlScripts.DELETE_CARD.getPath());
-        try (Connection connection = getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rows = stmt.executeUpdate();
-            if (rows > 0) return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public List<CreditCard> getAllCards(int accountId) throws SQLException {
-        String sql = getSQLPath(SqlScripts.FIND_ALL_CARDS_BY_ACCOUNT_ID.getPath());
-        try (Connection connection = getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, accountId);
-            ResultSet rs = stmt.executeQuery();
-            List<CreditCard> creditCards = new ArrayList<>();
-            while (rs.next()) {
-                CreditCard card = CreditCard.builder()
-                        .id(rs.getInt("id"))
-                        .number(rs.getString("number"))
-                        .registered(rs.getDate("registered"))
-                        .build();
-                creditCards.add(card);
+            if (success < 1) {
+                throw new SQLException("Deleting Credit card with Id = " + accountId
+                        + ", was not found. Deleting failed.");
+            } else {
+                return true;
             }
-            return creditCards;
         }
     }
 
-
-
-
+    @Override
+    public int getClientIdByAccountId(int accountId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.GET_CLIENT_ID_BY_CARD_ID.getPath());
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return -1;
+    }
 }
