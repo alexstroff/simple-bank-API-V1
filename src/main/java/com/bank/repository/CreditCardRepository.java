@@ -11,7 +11,7 @@ public interface CreditCardRepository {
      * Get CreditCard by Id.
      *
      * @param clientId
-     * @param creditCardId
+     * @param accountId
      * @param creditCardId
      * @return CreditCard.
      * @throws SQLException if CreditCard with Id not found.

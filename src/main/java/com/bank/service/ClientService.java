@@ -8,11 +8,10 @@ import java.util.List;
 public interface ClientService {
 
     /**
-     * Get Entity by Id.
+     * Get Client by Id.
      *
      * @param id
      * @return Client.
-     * @throws SQLException
      */
     Client getById(int id);
 
@@ -24,20 +23,18 @@ public interface ClientService {
     List<Client> getAll();
 
     /**
-     * Persist Entity.
+     * Persist Client.
      *
      * @param client
      * @return client
-     * @throws SQLException if not found or not created
      */
     Client save(Client client);
 
     /**
-     * Delete Entity by Id.
+     * Delete Client by Id.
      *
      * @param id
-     * @return true == "success"
-     * @throws SQLException
+     * @return true if success.
      */
     boolean delete(int id);
 

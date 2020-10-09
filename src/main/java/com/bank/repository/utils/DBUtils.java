@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBUtils {
-    // Base URI the Grizzly HTTP server will listen on
-
     //ToDo settings from resources
     //Resource resource = new ClassPathResource("db/postgres.properties");
     private static final String DB_DRIVER = "org.h2.Driver";

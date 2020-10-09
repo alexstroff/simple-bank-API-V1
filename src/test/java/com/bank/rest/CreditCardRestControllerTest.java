@@ -1,5 +1,6 @@
 package com.bank.rest;
 
+import com.bank.model.Account;
 import com.bank.model.CreditCard;
 import com.bank.repository.utils.DBUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -137,4 +139,49 @@ public class CreditCardRestControllerTest {
         List<CreditCard> newCardList = JacksonUtils.readValues(newGetAll, CreditCard.class);
         Assert.assertEquals(1, newCardList.size());
     }
+
+    @Test
+    public void incBallance() {
+        BigDecimal incValue = new BigDecimal(9999);
+
+        String URL = String.format("/client/%s/account/%s/", CLIENT_1_ID, ACCOUNT_1_ID);
+        String s = target.path(URL).request().get(String.class);
+
+        Account account = JacksonUtils.readValue(s, Account.class);
+        account.setAmount(account.getAmount().add(incValue));
+
+        Account account1 = JacksonUtils.readValue(s, Account.class);
+
+        String URL_INC = String.format("/client/%s/account/%s/card/%s/incbalance/%s", CLIENT_1_ID, ACCOUNT_1_ID, CARD_1.getId(), incValue);
+
+        Response response = target.path(URL_INC).request()
+                .put(Entity.entity(account1, MediaType.APPLICATION_JSON));
+
+        String URL_NEW = String.format("/client/%s/account/%s/", CLIENT_1_ID, ACCOUNT_1_ID);
+        String s1 = target.path(URL_NEW).request().get(String.class);
+        Account account2 = JacksonUtils.readValue(s, Account.class);
+        Assert.assertEquals(0,account1.getAmount().compareTo(account2.getAmount()));
+
+    }
+
+    @Test
+    public void decBallance() {
+        BigDecimal decValue = new BigDecimal(9999);
+        String URL = String.format("/client/%s/account/%s/", CLIENT_1_ID, ACCOUNT_1_ID);
+        String s = target.path(URL).request().get(String.class);
+        Account account = JacksonUtils.readValue(s, Account.class);
+        if (account.getAmount().compareTo(decValue) >= 0){
+            account.setAmount(account.getAmount().subtract(decValue));
+        }
+
+        Account account1 = JacksonUtils.readValue(s, Account.class);
+
+        String URL_INC = String.format("/client/%s/account/%s/card/%s/decballanse/%s", CLIENT_1_ID, ACCOUNT_1_ID, CARD_1.getId(), decValue);
+        Response response = target.path(URL_INC).request()
+                .put(Entity.entity(account1, MediaType.APPLICATION_JSON));
+
+        Account account2 = JacksonUtils.readValue(s, Account.class);
+        Assert.assertEquals(0,account1.getAmount().compareTo(account2.getAmount()));
+    }
+
 }
