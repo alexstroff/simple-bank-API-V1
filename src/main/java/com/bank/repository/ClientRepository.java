@@ -8,6 +8,15 @@ import java.util.List;
 public interface ClientRepository extends BaseRepository<Client> {
 
     /**
+     * Get Entity by Id.
+     *
+     * @param id
+     * @return Client.
+     * @throws SQLException
+     */
+    Client getById(int id) throws SQLException;
+
+    /**
      * Returns all Clients.
      *
      * @return List<Client>

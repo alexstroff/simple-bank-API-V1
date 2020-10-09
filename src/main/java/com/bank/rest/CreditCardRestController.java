@@ -1,57 +1,94 @@
 package com.bank.rest;
 
 import com.bank.model.Account;
+import com.bank.model.Client;
 import com.bank.model.CreditCard;
+import com.bank.model.to.AccountTo;
+import com.bank.model.to.CreditCardTo;
+import com.bank.model.to.CreditCardToWithId;
+import com.bank.model.utils.EntityUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.service.CreditCardServiceImpl;
+import com.bank.service.CreditCardService;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.smartcardio.Card;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
+import java.util.List;
 
-@Path("client/account/card")
+@Slf4j
+@Path("client/{clientId}/account/{accountId}/card")
 public class CreditCardRestController {
 
-    private CreditCardServiceImpl cardService;
+    private CreditCardService service;
 
     public CreditCardRestController() {
-        this.cardService = new CreditCardServiceImpl();
-    }
-
-    @GET
-    @Path("/all/{id}")
-    public String getAll(@PathParam("id") int id){
-        return JacksonUtils.writeValue(cardService.getAll(id));
+        this.service = new CreditCardServiceImpl();
     }
 
     @GET
     @Path("/{id}")
-    public String getById(@PathParam("id") int id) {
-        return JacksonUtils.writeValue(cardService.getById(id));
+    public String getById(@PathParam("clientId") int clientId,
+                          @PathParam("accountId") int accountId,
+                          @PathParam("id") int cardId) {
+        log.trace("clientId={}, accountId={}, cardId={}", clientId, accountId, cardId);
+        return JacksonUtils.writeValue(service.getById(clientId, accountId, cardId));
+    }
+
+    @GET
+    @Path("/all")
+    public String getAll(@PathParam("clientId") int clientId,
+                         @PathParam("accountId") int accountId) {
+        log.trace("clientId={}, accountId={}", clientId, accountId);
+
+        List<CreditCard> cards = service.getAll(clientId, accountId);
+        return JacksonUtils.writeValue(cards);
     }
 
     @POST
-    @Path("/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void add(@PathParam("id") int clientId, CreditCard card) {
-
-//        System.out.println(card);
-//        cardService.add(clientId, card);
+    public Response addAccount(@PathParam("clientId") int clientId,
+                               @PathParam("accountId") int accountId,
+                               CreditCardTo cardTo) {
+        log.trace("clientId={}, accountId={}, card={}", clientId, accountId, cardTo);
+        CreditCard cardForSave = EntityUtils.fromCreditCardTOToCreditCard(cardTo);
+        Client client = Client.builder().id(clientId).build();
+        cardForSave.setAccount(Account.builder().id(accountId).client(client).build());
+        CreditCard savedCard = service.save(cardForSave);
+        log.debug("Saved = {}", savedCard);
+        return Response.status(201).entity(savedCard.getId()).build();
     }
 
     @PUT
-    @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(Account account){
-//        cardService.update(account);
-    }
+    public Response update(@PathParam("clientId") int clientId,
+                         @PathParam("accountId") int accountId,
+                         CreditCardToWithId cardToWithId) {
+        log.trace("clientId={}, accountId={}, card={}", clientId, accountId, cardToWithId);
 
+        CreditCard cardForUpdate= EntityUtils.fromCreditCardToWithIdToCreditCard(cardToWithId);
+        Client client = Client.builder().id(clientId).build();
+        cardForUpdate.setAccount(Account.builder().id(accountId).client(client).build());
+        CreditCard savedCard = service.save(cardForUpdate);
+        log.debug("Updated = {}", savedCard);
+        return Response.status(202).entity(cardForUpdate).build();
+    }
 
     @DELETE
-    @Path("/delete/{id}")
-    public String deleteAccount(@PathParam("id") int id) {
-        if (cardService.delete(id)) {
-            return "true";
-        } else return "true";
+    @Path("/{id}")
+    public Response deleteAccount(@PathParam("clientId") int clientId,
+                                @PathParam("accountId") int accountId,
+                                @PathParam("id") int cardId) {
+//        if (service.delete(clientId, accountId, id)) {
+//            return "true";
+//        } else return "true";
+        return service.delete(clientId, accountId, cardId) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+
+
 
 }

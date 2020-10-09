@@ -12,13 +12,14 @@ import static com.bank.repository.utils.DBUtils.getSQLPath;
 
 public class AccountRepositoryImpl implements AccountRepository {
 
-    @Override
-    public Account getById(int id) throws SQLException {
-        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_ID.getPath());
+    //SELECT id, number, amount, currency FROM accounts WHERE clients_id = ? AND id = ?
+    public Account getById(int parentId, int entityId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_ID_AND_CLIENT_ID.getPath());
         Account account = null;
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, parentId);
+            stmt.setInt(2, entityId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 account = Account.builder()
@@ -30,7 +31,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             }
         }
         if (account == null) {
-            throw new SQLException("Account with Id=" + id + ", not found");
+            throw new SQLException("Account with Id=" + entityId + ", not found");
         } else {
             return account;
         }
@@ -57,6 +58,30 @@ public class AccountRepositoryImpl implements AccountRepository {
             return accounts;
         }
     }
+
+//    @Override
+//    public Account getById(int id) throws SQLException {
+//        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_ID.getPath());
+//        Account account = null;
+//        try (Connection connection = getConnection();
+//             PreparedStatement stmt = connection.prepareStatement(sql)) {
+//            stmt.setInt(1, id);
+//            ResultSet rs = stmt.executeQuery();
+//            if (rs.next()) {
+//                account = Account.builder()
+//                        .id(rs.getInt(1))
+//                        .number(rs.getString(2))
+//                        .amount(rs.getBigDecimal(3))
+//                        .currency(rs.getString(4))
+//                        .build();
+//            }
+//        }
+//        if (account == null) {
+//            throw new SQLException("Account with Id=" + id + ", not found");
+//        } else {
+//            return account;
+//        }
+//    }
 
 
     @Override
@@ -96,6 +121,30 @@ public class AccountRepositoryImpl implements AccountRepository {
         return account;
     }
 
+    @Override
+    public boolean delete(int parentId, int entityId) throws SQLException {
+        String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT_BY_ID_AND_CLIENT_ID.getPath());
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, parentId);
+            ps.setInt(2, entityId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) throws SQLException {
+        String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT.getPath());
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            int rows = stmt.executeUpdate();
+            if (rows != 0) return true;
+        }
+        return false;
+    }
+
 
 //    @Override
 //    public Account addAccount(int clientId, Account account) throws SQLException {
@@ -131,14 +180,4 @@ public class AccountRepositoryImpl implements AccountRepository {
 //        return account;
 //    }
 
-    @Override
-    public boolean delete(int id) throws SQLException {
-        String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT.getPath());
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rows = stmt.executeUpdate();
-            if (rows != 0) return true;
-        }
-        return false;
-    }
 }

@@ -1,6 +1,5 @@
 package com.bank.model.to;
 
-import com.bank.model.Client;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountTO {
-    private int id;
+public class AccountTo {
     private String number;
     private BigDecimal amount;
     private String currency;

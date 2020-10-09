@@ -2,74 +2,87 @@ package com.bank.rest;
 
 
 import com.bank.model.Account;
-import com.bank.model.to.AccountTO;
+import com.bank.model.Client;
+import com.bank.model.to.AccountTo;
+import com.bank.model.to.AccountToWithId;
 import com.bank.model.utils.EntityUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
+import com.bank.service.AccountService;
 import com.bank.service.AccountServiceImpl;
-import com.bank.service.ClientServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Slf4j
 @Path("client/{clientId}/account")
 public class AccountRestController {
 
-    //todo Боль!!! Спросить о зависимостях
-//    private AccountService accountService = new AccountService(DBUtils.getDataSource());
-//    private ClientService clientService = new ClientService();
-
-    private AccountServiceImpl accountService;
-    private ClientServiceImpl clientService;
+    private AccountService service;
 
     public AccountRestController() {
-        this.accountService = new AccountServiceImpl();
-        this.clientService = new ClientServiceImpl();
-    }
-
-    static final String REST_URL = "account";
-
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
-    @GET
-    @Path("/all")
-    public String getAll(@PathParam("clientId") int id) {
-        List<AccountTO> accountsTO = EntityUtils.fromAccountToAccountTO(accountService.getAll(id));
-        return JacksonUtils.writeValue(accountsTO);
+        this.service = new AccountServiceImpl();
     }
 
     @GET
     @Path("/{id}")
     public String getById(@PathParam("id") int id, @PathParam("clientId") int clientId) {
-        Account account = accountService.getById(clientId, id);
-        AccountTO accountTO = EntityUtils.fromAccountToAccountTO(account);
-        return JacksonUtils.writeValue(accountTO);
+        return JacksonUtils.writeValue(service.getById(clientId, id));
+    }
+
+    @GET
+    @Path("/all")
+    public String getAll(@PathParam("clientId") int clientId) {
+        log.trace("got clientId = {}", clientId);
+        List<Account> accounts = service.getAll(clientId);
+        return JacksonUtils.writeValue(accounts);
     }
 
     @POST
-    @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addAccount(@PathParam("clientId") int clientId, Account account) {
-        accountService.add(clientId, account);
+    public Response addAccount(@PathParam("clientId") int clientId, AccountTo accountTo) {
+        log.trace("got clientId={}, accountTo={}", clientId, accountTo);
+        Account accountForSave = EntityUtils.fromAccountTOToAccount(accountTo);
+        accountForSave.setClient(Client.builder().id(clientId).build());
+        Account newAccount = service.save(accountForSave);
+        log.debug("Saved = {}", newAccount);
+        return Response.status(201).entity(newAccount.getId()).build();
     }
 
     @PUT
-    @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("clientId") int clientId, Account account) {
-        accountService.update(clientId, account);
+    public Response update(@PathParam("clientId") int clientId, AccountToWithId accountToWithId) {
+        log.trace("got clientId={}, accountToWithId={}", clientId, accountToWithId);
+        Account account = service.save(EntityUtils.fromAccountToWithIdToAccount(accountToWithId));
+        account.setClient(Client.builder().id(clientId).build());
+        Account updatedAccount = service.save(account);
+        log.debug("return = {}", updatedAccount);
+        return Response.status(202).entity(updatedAccount).build();
     }
-
 
     @DELETE
-    @Path("/delete/{id}")
-    public String deleteAccount(@PathParam("clientId") int clientId, @PathParam("id") int id) {
-        if (accountService.delete(clientId, id)) {
-            return "true";
-        } else return "false";
+    @Path("/{id}")
+    public Response deleteAccount(@PathParam("clientId") int clientId, @PathParam("id") int id) {
+        return service.delete(clientId, id) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+//    @PUT
+//    @Path("/{id}/incbalance/{value}")
+//    public boolean increaseBallance(@PathParam("clientId") int clientId,
+//                                    @PathParam("accountId") int accountId,
+//                                    @PathParam("accountId") int id,
+//                                    @PathParam("value") BigDecimal value) {
+//        return service.increaseBallance(clientId, accountId, id, value);
+//    }
+//
+//    @PUT
+//    @Path("/{id}/decballanse/{value}")
+//    public boolean reduceBallance(@PathParam("clientId") int clientId,
+//                                  @PathParam("accountId") int accountId,
+//                                  @PathParam("accountId") int id,
+//                                  @PathParam("value") BigDecimal value) {
+//        return service.reduceBallance(clientId, accountId, id, value);
+//    }
 }

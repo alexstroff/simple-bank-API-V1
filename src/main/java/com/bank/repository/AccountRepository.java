@@ -5,22 +5,18 @@ import com.bank.model.Account;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface AccountRepository extends BaseRepository<Account>{
+public interface AccountRepository extends BaseRepository<Account> {
 
+    Account getById(int parentId, int entityId) throws SQLException;
 
     /**
      * Find and return all client's accounts
-     * @param clientId
+     *
+     * @param parentId
      * @return List<Account>
      * @throws SQLException
      */
+    List<Account> getAll(int parentId) throws SQLException;
 
-    List<Account> getAll(int clientId) throws SQLException;
-
-    /**
-     * @param account update account
-     */
-//    Account updateAccount(Account account) throws SQLException;
-
-
+    boolean delete(int clientId, int id) throws SQLException;
 }

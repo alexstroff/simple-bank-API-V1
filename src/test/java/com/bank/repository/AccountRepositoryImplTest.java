@@ -43,9 +43,16 @@ public class AccountRepositoryImplTest {
 
     @Test
     public void getById() throws SQLException {
-        Account account = repository.getById(ACCOUNT_1_ID);
+        Account account = repository.getById( CLIENT_1_ID, ACCOUNT_1_ID);
         ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, ACCOUNT_1);
     }
+
+
+
+
+
+
+
 
     @Test
     public void getAllAccounts() throws SQLException {
@@ -78,14 +85,14 @@ public class AccountRepositoryImplTest {
             ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, newAccount);
     }
 
-    @Test
-    public void updateAccount() throws SQLException {
-        Account account = ACCOUNT_1;
-        account.setAmount(new BigDecimal(121212).setScale(2));
-        repository.save(account);
-        Account account1 = repository.getById(ACCOUNT_1.getId());
-        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, account1);
-    }
+//    @Test
+//    public void updateAccount() throws SQLException {
+//        Account account = ACCOUNT_1;
+//        account.setAmount(new BigDecimal(121212).setScale(2));
+//        repository.save(account);
+//        Account account1 = repository.getById(ACCOUNT_1.getId());
+//        ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, account1);
+//    }
 
     @Test
     public void deleteAccount() throws SQLException {
@@ -105,92 +112,5 @@ public class AccountRepositoryImplTest {
         List<Account> newAccounts = repository.getAll(CLIENT_1.getId());
         oldAccounts.removeAll(newAccounts);
         Assert.assertEquals(1, oldAccounts.size());
-
     }
-
-
-    public void getEmptyAccountListException() throws SQLException {
-        repository.delete(ACCOUNT_1.getId());
-        Assert.assertEquals(0, repository.getAll(CLIENT_1.getId()));
-
-    }
-
-    //    @Test
-//    public void checkBalanceByAccountNumber() {
-//        try {
-//            BigDecimal d = repository.checkBalanceByAccountNumber(ACCOUNT_1.getNumber());
-//            Assert.assertEquals(d, ACCOUNT_1.getAmount());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @Test
-//    public void checkBalanceByAccountId() {
-//        try {
-//            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
-//            Assert.assertEquals(d, ACCOUNT_1.getAmount());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @Test
-//    public void depositFunds() {
-//        try {
-//            BigDecimal deposite = new BigDecimal(1000).setScale(2);
-//            boolean success = repository.depositFunds(ACCOUNT_1.getNumber(), deposite);
-//            Assert.assertTrue(success);
-//            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
-//            BigDecimal expected = ACCOUNT_1.getAmount().add(deposite);
-//            Assert.assertEquals(expected, d);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @Test
-//    public void getAccountListByClientId() {
-//        try {
-//            List<Account> accountListByClientId = repository.getAccountListByClientId(ClientTestData.CLIENT_1_ID);
-//            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(accountListByClientId, Arrays.asList(ACCOUNT_1));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @Test
-//    public void getCreditCardListByAccountId() {
-//        try {
-//            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
-//            Assert.assertEquals(1, cardList.size());
-//            Assert.assertEquals(cardList.get(0).getNumber(), CARD_1.getNumber());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Test
-//    public void addCreditCard() {
-//        try {
-//            String newNumber = "0000000000";
-//            repository.addCreditCard(ACCOUNT_1.getId(), newNumber);
-//            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
-//            Assert.assertEquals(2, cardList.size());
-//            Collections.sort(cardList, CreditCardTestData.creditCardComparator);
-//            Assert.assertEquals(newNumber, cardList.get(1).getNumber());
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//    }
-//
-//    @Test
-//    public void isCardNumberExists() {
-//        try {
-//            Assert.assertTrue(repository.isCardNumberExists(CARD_1.getNumber()));
-//            Assert.assertFalse(repository.isCardNumberExists("00000000x"));
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//    }
 }

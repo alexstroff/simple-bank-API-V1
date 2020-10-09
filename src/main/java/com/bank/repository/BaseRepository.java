@@ -3,14 +3,7 @@ package com.bank.repository;
 import java.sql.SQLException;
 
 public interface BaseRepository<T> {
-    /**
-     * Get Entity by Id.
-     *
-     * @param id
-     * @return Client.
-     * @throws SQLException
-     */
-    T getById(int id) throws SQLException;
+
 
     /**
      * Persist Entity.

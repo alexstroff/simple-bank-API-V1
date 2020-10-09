@@ -1,0 +1,1 @@
+DELETE FROM accounts WHERE clients_id = ? AND id = ?
