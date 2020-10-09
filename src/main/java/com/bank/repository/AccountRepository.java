@@ -5,18 +5,44 @@ import com.bank.model.Account;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface AccountRepository extends BaseRepository<Account> {
-
-    Account getById(int parentId, int entityId) throws SQLException;
+public interface AccountRepository {
 
     /**
-     * Find and return all client's accounts
+     * Get Account by Id.
      *
-     * @param parentId
-     * @return List<Account>
-     * @throws SQLException
+     * @param clientId
+     * @param accountId
+     * @return Client.
+     * @throws SQLException if Account with Id not found
      */
-    List<Account> getAll(int parentId) throws SQLException;
+    Account getById(int clientId, int accountId) throws SQLException;
 
-    boolean delete(int clientId, int id) throws SQLException;
+    /**
+     * Find and return all client's accounts.
+     *
+     * @param clientId
+     * @return List<Account>
+     * @throws SQLException if DB exceptions
+     */
+    List<Account> getAll(int clientId) throws SQLException;
+
+    /**
+     * Persist Account.
+     *
+     * @param account
+     * @return Account.
+     * @throws SQLException if Account Id not found or database did not allocate a number.
+     */
+    Account save(Account account) throws SQLException;
+
+
+    /**
+     * Delete Account by Id.
+     *
+     * @param clientId
+     * @param accountId
+     * @return true if success.
+     * @throws SQLException if AccountId not found.
+     */
+    boolean delete(int clientId, int accountId) throws SQLException;
 }

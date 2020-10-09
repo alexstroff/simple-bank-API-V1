@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 @Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
@@ -35,21 +34,6 @@ public class CreditCardServiceImpl implements CreditCardService {
         return creditCard;
     }
 
-
-//    @Override
-//    public CreditCard getById(int id) {
-//        log.trace("id={}", id);
-//
-//        CreditCard card = new CreditCard();
-//        try {
-//            card = cardRepository.getById(id);
-//        } catch (SQLException e) {
-//            log.warn("id={}", id, e);
-//        }
-//        log.trace("returning={}", card);
-//        return card;
-//    }
-
     @Override
     public List<CreditCard> getAll(int clientId, int accountId) {
         log.trace("clientId={}, accountId={}", clientId, accountId);
@@ -64,21 +48,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         return cards;
     }
-
-//    @Override
-//    public List<CreditCard> getAll(int accountId) {
-//        log.trace("id={}", accountId);
-//
-//        List<CreditCard> cards = null;
-//        try {
-//            cards = repository.getAll(accountId);
-//        } catch (SQLException e) {
-//            log.warn("id={}", accountId, e);
-//        }
-//        log.trace("returning={}", cards);
-//
-//        return cards;
-//    }
 
     @Override
     public CreditCard save(CreditCard card) {
@@ -101,7 +70,6 @@ public class CreditCardServiceImpl implements CreditCardService {
         return card1;
     }
 
-
     @Override
     public boolean delete(int clientId, int accountId, int cardId) {
         log.trace("clientId={}, accountId={}, cardId={}", cardId, accountId, cardId);
@@ -117,20 +85,6 @@ public class CreditCardServiceImpl implements CreditCardService {
             })) {
                 success = true;
             }
-        } catch (Exception e) {
-            log.warn("Card was not deleted!", e);
-        }
-        log.trace("returning={}", success);
-        return success;
-    }
-
-    @Override
-    public boolean delete(int cardId) {
-        log.trace("got={}", cardId);
-
-        boolean success = false;
-        try {
-            if (txManager.doInTransaction(() -> repository.delete(cardId))) success = true;
         } catch (Exception e) {
             log.warn("Card was not deleted!", e);
         }

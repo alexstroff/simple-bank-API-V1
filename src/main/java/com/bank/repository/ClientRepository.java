@@ -5,29 +5,41 @@ import com.bank.model.Client;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface ClientRepository extends BaseRepository<Client> {
+public interface ClientRepository {
 
     /**
-     * Get Entity by Id.
+     * Get Client by Id.
      *
      * @param id
      * @return Client.
-     * @throws SQLException
+     * @throws SQLException if Client with Id not found
      */
     Client getById(int id) throws SQLException;
 
     /**
-     * Returns all Clients.
+     * Returns List of Clients.
      *
      * @return List<Client>
-     * @throws SQLException
+     * @throws SQLException if DB exceptions
      */
     List<Client> getAll() throws SQLException;
 
-//    Client getById (int clientId) throws SQLException;
-//    Client getByAccountId (int AccountId) throws SQLException;
-//
-//
-//
-//    boolean add(String name, String email) throws SQLException;
+    /**
+     * Persist Client.
+     *
+     * @param client
+     * @return client
+     * @throws SQLException if Client Id not found or database did not allocate a number.
+     */
+    Client save(Client client) throws SQLException;
+
+    /**
+     * Delete Client by Id.
+     *
+     * @param id
+     * @return true if success.
+     * @throws SQLException if Client with Id not found
+     */
+    boolean delete(int id) throws SQLException;
+
 }

@@ -3,7 +3,6 @@ package com.bank.rest;
 import com.bank.model.Account;
 import com.bank.model.Client;
 import com.bank.model.CreditCard;
-import com.bank.model.to.AccountTo;
 import com.bank.model.to.CreditCardTo;
 import com.bank.model.to.CreditCardToWithId;
 import com.bank.model.utils.EntityUtils;
@@ -12,11 +11,9 @@ import com.bank.service.CreditCardServiceImpl;
 import com.bank.service.CreditCardService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.smartcardio.Card;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j

@@ -1,5 +1,6 @@
 package com.bank.rest.JacksonUtils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -9,8 +10,12 @@ import java.util.List;
 
 public class JacksonUtils {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER;
 
+    static {
+        MAPPER = new ObjectMapper();
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
     public static ObjectMapper getMapper() {
         return MAPPER;
     }

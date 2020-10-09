@@ -4,7 +4,7 @@ import com.bank.model.CreditCard;
 
 import java.util.List;
 
-public interface CreditCardService extends BaseService<CreditCard> {
+public interface CreditCardService {
 
     CreditCard getById(int clientId, int accountId, int cardId);
 
@@ -12,11 +12,6 @@ public interface CreditCardService extends BaseService<CreditCard> {
 
     CreditCard save(CreditCard card);
 
-    boolean delete(int cardId);
-
     boolean delete(int clientId, int accountId, int cardId);
-
-//    List<CreditCard> getAll(int id);
-
 
 }

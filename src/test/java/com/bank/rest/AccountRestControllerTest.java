@@ -33,7 +33,7 @@ public class AccountRestControllerTest {
     private static WebTarget target;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         server = HttpServerUtils.startServer();
         javax.ws.rs.client.Client c = ClientBuilder.newClient();
         target = c.target(HttpServerUtils.BASE_URI);
@@ -50,7 +50,7 @@ public class AccountRestControllerTest {
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDown() {
         server.stop();
     }
 
