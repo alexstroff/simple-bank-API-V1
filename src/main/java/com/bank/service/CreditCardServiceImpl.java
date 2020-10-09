@@ -21,7 +21,6 @@ public class CreditCardServiceImpl implements CreditCardService {
     private CreditCardRepository repository;
     private TxManager txManager;
     private AccountRepository accountRepository;
-    private CreditCardRepository cardRepository;
 
     public CreditCardServiceImpl() {
         this.repository = new CreditCardRepositoryImpl();
