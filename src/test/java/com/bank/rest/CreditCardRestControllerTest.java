@@ -142,15 +142,17 @@ public class CreditCardRestControllerTest {
 
     @Test
     public void incBallance() {
+        BigDecimal incValue = new BigDecimal(9999);
+
         String URL = String.format("/client/%s/account/%s/", CLIENT_1_ID, ACCOUNT_1_ID);
         String s = target.path(URL).request().get(String.class);
 
         Account account = JacksonUtils.readValue(s, Account.class);
-        account.setAmount(account.getAmount().add(new BigDecimal(999)));
+        account.setAmount(account.getAmount().add(incValue));
 
         Account account1 = JacksonUtils.readValue(s, Account.class);
 
-        String URL_INC = String.format("/client/%s/account/%s/card/%s/incbalance/%s", CLIENT_1_ID, ACCOUNT_1_ID, CARD_1.getId(), 999);
+        String URL_INC = String.format("/client/%s/account/%s/card/%s/incbalance/%s", CLIENT_1_ID, ACCOUNT_1_ID, CARD_1.getId(), incValue);
 
         Response response = target.path(URL_INC).request()
                 .put(Entity.entity(account1, MediaType.APPLICATION_JSON));
