@@ -77,6 +77,8 @@ public class ClientRestControllerTest {
         Response response = target.path("/client/add").request()
                 .post(Entity.entity(client, MediaType.APPLICATION_JSON));
 
+
+
         assertEquals("should return status 201", 201, response.getStatus());
 
         String s1 = target.path("/client/all").request().get(String.class);
