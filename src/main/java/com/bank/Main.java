@@ -23,7 +23,10 @@ public class Main {
                 RunScript.execute(DBUtils.getConnection(), new FileReader(arg));
             }
         } else {
-
+//            RunScript.execute(DBUtils.getConnection(),, new FileReader("src/main/resources/dataBase/H2init.SQL"));
+//            RunScript.execute(DBUtils.getConnection(),, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
+            RunScript.execute(DBUtils.getConnection(), new FileReader("resources/dataBase/H2init.SQL"));
+            RunScript.execute(DBUtils.getConnection(), new FileReader("resources/dataBase/H2populate.SQL"));
             System.out.println("Starting server with example scripts");
         }
         HttpServerUtils.startService();
