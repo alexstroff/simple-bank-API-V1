@@ -67,22 +67,4 @@ public class AccountRestController {
     public Response deleteAccount(@PathParam("clientId") int clientId, @PathParam("id") int id) {
         return service.delete(clientId, id) ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
-
-//    @PUT
-//    @Path("/{id}/incbalance/{value}")
-//    public boolean increaseBallance(@PathParam("clientId") int clientId,
-//                                    @PathParam("accountId") int accountId,
-//                                    @PathParam("accountId") int id,
-//                                    @PathParam("value") BigDecimal value) {
-//        return service.increaseBallance(clientId, accountId, id, value);
-//    }
-//
-//    @PUT
-//    @Path("/{id}/decballanse/{value}")
-//    public boolean reduceBallance(@PathParam("clientId") int clientId,
-//                                  @PathParam("accountId") int accountId,
-//                                  @PathParam("accountId") int id,
-//                                  @PathParam("value") BigDecimal value) {
-//        return service.reduceBallance(clientId, accountId, id, value);
-//    }
 }

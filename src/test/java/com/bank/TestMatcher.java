@@ -1,6 +1,5 @@
 package com.bank;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -2,6 +2,8 @@ package com.bank.rest;
 
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
+import com.bank.model.to.CreditCardToWithId;
+import com.bank.model.utils.EntityUtils;
 import com.bank.repository.utils.DBUtils;
 import com.bank.rest.JacksonUtils.JacksonUtils;
 import com.bank.utils.HttpServerUtils;
@@ -107,6 +109,7 @@ public class CreditCardRestControllerTest {
         String URL = String.format("/client/%s/account/%s/card", CLIENT_1_ID, ACCOUNT_1_ID);
         CreditCard card = new CreditCard(CARD_1);
         card.setNumber("8888888888888");
+        log.debug("Card for Update={}", card);
         Response response = target.path(URL).request()
                 .put(Entity.entity(card, MediaType.APPLICATION_JSON));
         assertEquals("should return status 202", 202, response.getStatus());

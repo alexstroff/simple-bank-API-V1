@@ -101,8 +101,4 @@ public class CreditCardRestController {
         return service.reduceBallance(clientId, accountId, id, value);
     }
 
-
-
-
-
 }
